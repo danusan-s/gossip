@@ -37,7 +37,7 @@ export default function ForumCreation() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/forums",
+        "http://localhost:8080/api/forums",
         formData,
       );
       console.log("Response:", response.data);

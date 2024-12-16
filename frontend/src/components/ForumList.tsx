@@ -11,7 +11,7 @@ import { styled } from "@mui/material/styles";
 interface Forum {
   id: number;
   title: string;
-  description?: string; // Optional field
+  description: string;
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -35,7 +35,7 @@ export default function ForumList() {
     const fetchForums = async () => {
       try {
         const response = await axios.get<Forum[]>(
-          "http://localhost:8080/forums",
+          "http://localhost:8080/api/forums",
         );
         setForums(response.data);
       } catch (err) {
@@ -54,7 +54,7 @@ export default function ForumList() {
   const list = forums.map((value) => {
     return (
       <Button style={{ width: "100%" }}>
-        <Item>
+        <Item key={value.id}>
           <Typography variant="h6">{value.title}</Typography>
           <Typography variant="body1">{value.description}</Typography>
         </Item>
