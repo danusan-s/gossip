@@ -7,7 +7,11 @@ interface FormData {
   description: string;
 }
 
-export default function ForumCreation() {
+export default function ForumCreation({
+  handleComponentSwitch,
+}: {
+  handleComponentSwitch: CallableFunction;
+}) {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -42,6 +46,7 @@ export default function ForumCreation() {
       );
       console.log("Response:", response.data);
       setFormData({ title: "", description: "" });
+      handleComponentSwitch("list");
     } catch (err) {
       console.error("Error sending data:", err);
       setError("Failed to submit data.");
@@ -50,49 +55,59 @@ export default function ForumCreation() {
 
   return (
     <Box
-      component="form"
-      onSubmit={handleSubmit}
       sx={{
         display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        maxWidth: 400,
-        margin: "0 auto",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
       }}
     >
-      <Typography variant="h5" gutterBottom>
-        Fill out details for new post
-      </Typography>
-
-      <TextField
-        label="Title"
-        name="title"
-        value={formData.title}
-        onChange={handleChange}
-        required
-        fullWidth
-      />
-
-      <TextField
-        label="Description"
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        required
-        multiline
-        rows={4}
-        fullWidth
-      />
-
-      {error && (
-        <Typography color="error" variant="body2">
-          {error}
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          maxWidth: 400,
+          margin: "0 auto",
+          transform: "translateY(-10%)",
+        }}
+      >
+        <Typography variant="h5" gutterBottom>
+          Fill out details for new post
         </Typography>
-      )}
 
-      <Button type="submit" variant="contained" color="primary">
-        Submit
-      </Button>
+        <TextField
+          label="Title"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+          fullWidth
+        />
+
+        <TextField
+          label="Description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          required
+          multiline
+          rows={4}
+          fullWidth
+        />
+
+        {error && (
+          <Typography color="error" variant="body2">
+            {error}
+          </Typography>
+        )}
+
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </Box>
     </Box>
   );
 }

@@ -58,8 +58,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function ForumAppBar({
   handleComponentSwitch,
+  account,
 }: {
   handleComponentSwitch: CallableFunction;
+  account: string | null;
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -102,7 +104,36 @@ export default function ForumAppBar({
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {account !== null && (
+        <MenuItem
+          onClick={() => {
+            handleComponentSwitch("profile");
+            handleMenuClose();
+          }}
+        >
+          My account
+        </MenuItem>
+      )}
+      {account === null && (
+        <>
+          <MenuItem
+            onClick={() => {
+              handleComponentSwitch("signin");
+              handleMenuClose();
+            }}
+          >
+            Sign In
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleComponentSwitch("signup");
+              handleMenuClose();
+            }}
+          >
+            Sign Up
+          </MenuItem>
+        </>
+      )}
     </Menu>
   );
 
@@ -128,18 +159,6 @@ export default function ForumAppBar({
           <AddIcon />
         </IconButton>
         <p>Create New Post</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -186,23 +205,16 @@ export default function ForumAppBar({
             </Search>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton
-                size="large"
-                aria-label="create new post"
-                color="inherit"
-                onClick={() => handleComponentSwitch("creation")}
-              >
-                <AddIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="show new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+              {account !== null && (
+                <IconButton
+                  size="large"
+                  aria-label="create new post"
+                  color="inherit"
+                  onClick={() => handleComponentSwitch("create")}
+                >
+                  <AddIcon />
+                </IconButton>
+              )}
               <IconButton
                 size="large"
                 edge="end"
