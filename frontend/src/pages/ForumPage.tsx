@@ -1,15 +1,15 @@
-import * as React from "react";
-import { useState } from "react";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
+import { useEffect, useState } from "react";
 import ForumAppBar from "../components/ForumAppBar";
-import ForumSideBar from "../components/ForumSideBar";
+import ForumList from "../components/ForumList";
+import ForumCreation from "../components/ForumCreation";
 
-export default function Blog(props: { disableCustomTheme?: boolean }) {
+export default function ForumPage() {
+  const [currentComponent, setCurrentComponent] = useState<string>("list");
+
   return (
     <>
-      <ForumAppBar />
-      <ForumSideBar />
+      <ForumAppBar handleComponentSwitch={setCurrentComponent} />
+      {currentComponent === "list" ? <ForumList /> : <ForumCreation />}
     </>
   );
 }
