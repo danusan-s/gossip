@@ -25,6 +25,7 @@ export default function ForumPage() {
   const handleLogout = () => {
     setAccount(null);
     localStorage.removeItem("token");
+    setCurrentComponent("list");
   };
 
   const verifyToken = async (token: string) => {
@@ -63,8 +64,6 @@ export default function ForumPage() {
 
   const getComponent = () => {
     switch (currentComponent) {
-      case "loading":
-        return <div> Loading user </div>;
       case "list":
         return <ForumList handleItemClick={handleForumListClick} />;
       case "create":
@@ -79,7 +78,7 @@ export default function ForumPage() {
       case "signup":
         return <SignUp handleComponentSwitch={setCurrentComponent} />;
       case "forum":
-        return <Forum id={forumID} />;
+        return <Forum id={forumID} account={account} />;
       default:
         return <ForumList handleItemClick={handleForumListClick} />;
     }

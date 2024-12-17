@@ -1,6 +1,21 @@
-import { Box, Typography, Chip, Grid2 as Grid } from "@mui/material";
+import { Paper, Box, Typography, Chip, Grid2 as Grid } from "@mui/material";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Comments from "./Comments";
+import { styled } from "@mui/material/styles";
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  width: "100%",
+  ...theme.typography.body2,
+  padding: theme.spacing(3),
+  textAlign: "left",
+  textTransform: "none",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
 
 interface Forum {
   id: number;
@@ -9,7 +24,13 @@ interface Forum {
   author: string;
 }
 
-export default function Forum({ id }: { id: number }) {
+export default function Forum({
+  id,
+  account,
+}: {
+  id: number;
+  account: string | null;
+}) {
   const [forum, setForum] = useState<Forum>({
     id: 0,
     title: "",
@@ -40,20 +61,23 @@ export default function Forum({ id }: { id: number }) {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <Box sx={{ margin: "1rem" }}>
+    <Box sx={{ margin: "2rem" }}>
       <Grid container>
-        <Grid size={{ xs: 12, sm: 6 }} offset={{ xs: 0, sm: 3 }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h6">{forum.title}</Typography>
-            <Chip label={forum.author} />
-          </Box>
-          <Typography variant="body1">{forum.description}</Typography>
+        <Grid size={{ xs: 12, sm: 8 }} offset={{ xs: 0, sm: 2 }}>
+          <Item>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h6">{forum.title}</Typography>
+              <Chip label={forum.author} />
+            </Box>
+            <Typography variant="body1">{forum.description}</Typography>
+          </Item>
+          <Comments forumId={id} account={account} />
         </Grid>
       </Grid>
     </Box>
