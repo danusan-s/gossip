@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -14,7 +13,7 @@ func Connect() (*sql.DB, error) {
 	// Load environment variables from .env file
 	err := godotenv.Load()
 	if err != nil {
-		log.Printf("Warning: Error loading .env file: %v", err)
+		return nil, fmt.Errorf("failed to load .env file: %v", err)
 	}
 
 	// Get database connection details from environment variables
