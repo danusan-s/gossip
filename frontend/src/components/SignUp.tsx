@@ -21,7 +21,6 @@ export default function SignUp({
     e.preventDefault();
     try {
       await axios.post("http://localhost:8080/api/register", formData);
-      alert("Registration successful!");
       handleComponentSwitch("signin");
     } catch (err) {
       alert("Error registering user.");

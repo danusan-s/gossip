@@ -3,11 +3,9 @@ import axios from "axios";
 import { TextField, Button, Box, Typography } from "@mui/material";
 
 export default function SignIn({
-  handleAccount,
-  handleComponentSwitch,
+  handleAccountLogin,
 }: {
-  handleAccount: CallableFunction;
-  handleComponentSwitch: CallableFunction;
+  handleAccountLogin: CallableFunction;
 }) {
   const [formData, setFormData] = useState({
     username: "",
@@ -21,10 +19,13 @@ export default function SignIn({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/api/login", formData);
-      handleAccount(formData.username);
-      alert("Login successful!");
-      handleComponentSwitch("list");
+      const response = await axios.post(
+        "http://localhost:8080/api/login",
+        formData,
+      );
+      localStorage.setItem("token", response.data.token);
+      handleAccountLogin(formData.username);
+      setFormData({ username: "", password: "" });
     } catch (err) {
       alert("Incorrect login details");
     }
