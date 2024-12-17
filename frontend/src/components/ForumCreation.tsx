@@ -8,8 +8,10 @@ interface FormData {
 }
 
 export default function ForumCreation({
+  account,
   handleComponentSwitch,
 }: {
+  account: string | null;
   handleComponentSwitch: CallableFunction;
 }) {
   const [formData, setFormData] = useState<FormData>({
@@ -32,6 +34,10 @@ export default function ForumCreation({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!account) {
+      setError("Must be logged in to create post.");
+      return;
+    }
     if (!formData.title || !formData.description) {
       setError("Both fields are required.");
       return;
@@ -40,10 +46,16 @@ export default function ForumCreation({
     setError(null);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/forums",
-        formData,
-      );
+      // Assuming the JWT is stored in localStorage
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post("http://localhost:8080/api/forums", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        ...formData,
+        author: account,
+      });
       console.log("Response:", response.data);
       setFormData({ title: "", description: "" });
       handleComponentSwitch("list");

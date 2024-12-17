@@ -6,14 +6,13 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import AddIcon from "@mui/icons-material/Add";
+import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Button from "@mui/material/Button";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
 const Search = styled("div")(({ theme }) => ({
@@ -59,9 +58,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function ForumAppBar({
   handleComponentSwitch,
   account,
+  handleAccountLogout,
 }: {
   handleComponentSwitch: CallableFunction;
   account: string | null;
+  handleAccountLogout: CallableFunction;
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -87,6 +88,25 @@ export default function ForumAppBar({
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleAccountSignIn = () => {
+    handleComponentSwitch("signin");
+    handleMenuClose();
+  };
+
+  const handleAccountSignUp = () => {
+    handleComponentSwitch("signup");
+    handleMenuClose();
+  };
+
+  const handleLogoutClick = () => {
+    handleAccountLogout();
+    handleMenuClose();
+  };
+  const handleAccountProfile = () => {
+    handleComponentSwitch("profile");
+    handleMenuClose();
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -105,33 +125,15 @@ export default function ForumAppBar({
       onClose={handleMenuClose}
     >
       {account !== null && (
-        <MenuItem
-          onClick={() => {
-            handleComponentSwitch("profile");
-            handleMenuClose();
-          }}
-        >
-          My account
-        </MenuItem>
+        <>
+          <MenuItem onClick={handleAccountProfile}>My account</MenuItem>
+          <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+        </>
       )}
       {account === null && (
         <>
-          <MenuItem
-            onClick={() => {
-              handleComponentSwitch("signin");
-              handleMenuClose();
-            }}
-          >
-            Sign In
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleComponentSwitch("signup");
-              handleMenuClose();
-            }}
-          >
-            Sign Up
-          </MenuItem>
+          <MenuItem onClick={handleAccountSignIn}>Sign In</MenuItem>
+          <MenuItem onClick={handleAccountSignUp}>Sign Up</MenuItem>
         </>
       )}
     </Menu>
@@ -180,17 +182,19 @@ export default function ForumAppBar({
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
+            <IconButton
+              sx={{ display: { xs: "flex", sm: "none" }, marginRight: "1rem" }}
+              onClick={() => handleComponentSwitch("list")}
+            >
+              <HomeIcon />
+            </IconButton>
             <Button
               variant="text"
               color="inherit"
+              sx={{ display: { xs: "none", sm: "block" } }}
               onClick={() => handleComponentSwitch("list")}
             >
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ display: { xs: "none", sm: "block" } }}
-              >
+              <Typography variant="h6" noWrap component="div">
                 Forums
               </Typography>
             </Button>

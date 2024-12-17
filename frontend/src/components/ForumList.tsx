@@ -1,17 +1,21 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid2";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import {
+  Box,
+  Paper,
+  Grid2 as Grid,
+  Stack,
+  Typography,
+  Button,
+  Chip,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 interface Forum {
   id: number;
   title: string;
   description: string;
+  author: string;
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -20,13 +24,18 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(3),
   textAlign: "left",
+  textTransform: "none",
   color: theme.palette.text.secondary,
   ...theme.applyStyles("dark", {
     backgroundColor: "#1A2027",
   }),
 }));
 
-export default function ForumList() {
+export default function ForumList({
+  handleItemClick,
+}: {
+  handleItemClick: CallableFunction;
+}) {
   const [forums, setForums] = useState<Forum[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,14 +62,27 @@ export default function ForumList() {
 
   const list = forums.map((value) => {
     return (
-      <Button style={{ width: "100%" }}>
+      <Button
+        style={{ width: "100%" }}
+        onClick={() => handleItemClick(value.id)}
+      >
         <Item key={value.id}>
-          <Typography variant="h6">{value.title}</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6">{value.title}</Typography>
+            <Chip label={value.author} />
+          </Box>
           <Typography variant="body1">{value.description}</Typography>
         </Item>
       </Button>
     );
   });
+
   return (
     <Box sx={{ margin: "1rem" }}>
       <Grid container>
