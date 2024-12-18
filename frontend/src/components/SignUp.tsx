@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { TextField, Button, Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-export default function SignUp({
-  handleComponentSwitch,
-}: {
-  handleComponentSwitch: CallableFunction;
-}) {
+export default function SignUp() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,7 +20,7 @@ export default function SignUp({
     e.preventDefault();
     try {
       await axios.post("http://localhost:8080/api/register", formData);
-      handleComponentSwitch("signin");
+      navigate("/signin");
     } catch (err) {
       alert("Error registering user.");
     }

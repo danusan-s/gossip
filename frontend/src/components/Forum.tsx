@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Comments from "./Comments";
 import { styled } from "@mui/material/styles";
+import { useParams } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -24,13 +25,7 @@ interface Forum {
   author: string;
 }
 
-export default function Forum({
-  id,
-  account,
-}: {
-  id: number;
-  account: string | null;
-}) {
+export default function Forum({ account }: { account: string | null }) {
   const [forum, setForum] = useState<Forum>({
     id: 0,
     title: "",
@@ -39,6 +34,12 @@ export default function Forum({
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { forumID } = useParams<{ forumID: string }>();
+  const id = parseInt(forumID || "", 10);
+
+  if (isNaN(id)) {
+    return <div>Invalid forum ID</div>;
+  }
 
   useEffect(() => {
     const fetchForum = async () => {

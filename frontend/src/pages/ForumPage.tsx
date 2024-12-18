@@ -5,27 +5,19 @@ import ForumCreation from "../components/ForumCreation";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
 import Forum from "../components/Forum";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 export default function ForumPage() {
-  const [currentComponent, setCurrentComponent] = useState<string>("list");
   const [account, setAccount] = useState<string | null>(null);
-  const [forumID, setForumID] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const handleForumListClick = (id: number) => {
-    setCurrentComponent("forum");
-    setForumID(id);
-  };
 
   const handleLogin = (acc: string) => {
     setAccount(acc);
-    setCurrentComponent("list");
   };
 
   const handleLogout = () => {
     setAccount(null);
     localStorage.removeItem("token");
-    setCurrentComponent("list");
   };
 
   const verifyToken = async (token: string) => {
@@ -62,38 +54,24 @@ export default function ForumPage() {
     }
   }, []);
 
-  const getComponent = () => {
-    switch (currentComponent) {
-      case "list":
-        return <ForumList handleItemClick={handleForumListClick} />;
-      case "create":
-        return (
-          <ForumCreation
-            account={account}
-            handleComponentSwitch={setCurrentComponent}
-          />
-        );
-      case "signin":
-        return <SignIn handleAccountLogin={handleLogin} />;
-      case "signup":
-        return <SignUp handleComponentSwitch={setCurrentComponent} />;
-      case "forum":
-        return <Forum id={forumID} account={account} />;
-      default:
-        return <ForumList handleItemClick={handleForumListClick} />;
-    }
-  };
-
   if (loading) return <div>Loading User...</div>;
 
   return (
-    <>
-      <ForumAppBar
-        handleComponentSwitch={setCurrentComponent}
-        account={account}
-        handleAccountLogout={handleLogout}
-      />
-      {getComponent()}
-    </>
+    <Router>
+      <ForumAppBar account={account} handleAccountLogout={handleLogout} />
+      <Routes>
+        <Route path="/forum" element={<ForumList />} />
+        <Route
+          path="/forum/create"
+          element={<ForumCreation account={account} />}
+        />
+        <Route
+          path="/signin"
+          element={<SignIn handleAccountLogin={handleLogin} />}
+        />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forum/:forumID" element={<Forum account={account} />} />
+      </Routes>
+    </Router>
   );
 }

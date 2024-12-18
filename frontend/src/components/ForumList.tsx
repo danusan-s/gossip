@@ -10,6 +10,7 @@ import {
   Chip,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 interface Forum {
   id: number;
@@ -31,14 +32,12 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-export default function ForumList({
-  handleItemClick,
-}: {
-  handleItemClick: CallableFunction;
-}) {
+export default function ForumList() {
   const [forums, setForums] = useState<Forum[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchForums = async () => {
@@ -64,9 +63,10 @@ export default function ForumList({
     return (
       <Button
         style={{ width: "100%" }}
-        onClick={() => handleItemClick(value.id)}
+        onClick={() => navigate(`/forums/${value.id}`)}
+        key={value.id}
       >
-        <Item key={value.id}>
+        <Item>
           <Box
             sx={{
               display: "flex",

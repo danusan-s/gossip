@@ -14,6 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Button from "@mui/material/Button";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,11 +57,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function ForumAppBar({
-  handleComponentSwitch,
   account,
   handleAccountLogout,
 }: {
-  handleComponentSwitch: CallableFunction;
   account: string | null;
   handleAccountLogout: CallableFunction;
 }) {
@@ -70,6 +69,7 @@ export default function ForumAppBar({
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -89,22 +89,23 @@ export default function ForumAppBar({
   };
 
   const handleAccountSignIn = () => {
-    handleComponentSwitch("signin");
     handleMenuClose();
+    navigate("/signin");
   };
 
   const handleAccountSignUp = () => {
-    handleComponentSwitch("signup");
     handleMenuClose();
+    navigate("/signup");
   };
 
   const handleLogoutClick = () => {
     handleAccountLogout();
     handleMenuClose();
+    navigate("/forum");
   };
   const handleAccountProfile = () => {
-    handleComponentSwitch("profile");
     handleMenuClose();
+    navigate("/profile");
   };
 
   const menuId = "primary-search-account-menu";
@@ -156,7 +157,12 @@ export default function ForumAppBar({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem
+        onClick={() => {
+          navigate("/forum/create");
+          handleMobileMenuClose();
+        }}
+      >
         <IconButton size="large" aria-label="create new post" color="inherit">
           <AddIcon />
         </IconButton>
@@ -184,7 +190,7 @@ export default function ForumAppBar({
           <Toolbar>
             <IconButton
               sx={{ display: { xs: "flex", sm: "none" }, marginRight: "1rem" }}
-              onClick={() => handleComponentSwitch("list")}
+              onClick={() => navigate("/forum")}
             >
               <HomeIcon />
             </IconButton>
@@ -192,7 +198,7 @@ export default function ForumAppBar({
               variant="text"
               color="inherit"
               sx={{ display: { xs: "none", sm: "block" } }}
-              onClick={() => handleComponentSwitch("list")}
+              onClick={() => navigate("/forum")}
             >
               <Typography variant="h6" noWrap component="div">
                 Forums
@@ -214,7 +220,7 @@ export default function ForumAppBar({
                   size="large"
                   aria-label="create new post"
                   color="inherit"
-                  onClick={() => handleComponentSwitch("create")}
+                  onClick={() => navigate("/forum/create")}
                 >
                   <AddIcon />
                 </IconButton>

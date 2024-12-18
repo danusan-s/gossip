@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { TextField, Button, Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn({
   handleAccountLogin,
@@ -11,6 +12,8 @@ export default function SignIn({
     username: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,6 +28,7 @@ export default function SignIn({
       );
       localStorage.setItem("token", response.data.token);
       handleAccountLogin(formData.username);
+      navigate("/forum");
       setFormData({ username: "", password: "" });
     } catch (err) {
       alert("Incorrect login details");
