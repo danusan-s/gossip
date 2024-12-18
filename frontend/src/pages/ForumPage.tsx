@@ -6,25 +6,12 @@ import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
 import Forum from "../components/Forum";
 import { Route, Routes } from "react-router-dom";
+import { useAppDispatch } from "../hooks";
+import { setAccount, unsetAccount } from "../slices/account";
 
-export default function ForumPage({
-  currentTheme,
-  handleTheme,
-}: {
-  currentTheme: boolean;
-  handleTheme: CallableFunction;
-}) {
-  const [account, setAccount] = useState<string | null>(null);
+export default function ForumPage() {
   const [loading, setLoading] = useState<boolean>(true);
-
-  const handleLogin = (acc: string) => {
-    setAccount(acc);
-  };
-
-  const handleLogout = () => {
-    setAccount(null);
-    localStorage.removeItem("token");
-  };
+  const dispatch = useAppDispatch();
 
   const verifyToken = async (token: string) => {
     try {
@@ -40,12 +27,12 @@ export default function ForumPage({
         setAccount(userData.user); // Set the user data from backend
       } else {
         console.error("Token verification failed");
-        setAccount(null); // If verification fails, set user to null
+        dispatch(unsetAccount());
       }
     } catch (error) {
       console.error("Error verifying token:", error);
       localStorage.removeItem("token");
-      setAccount(null);
+      dispatch(unsetAccount());
     } finally {
       setLoading(false);
     }
@@ -64,24 +51,13 @@ export default function ForumPage({
 
   return (
     <>
-      <ForumAppBar
-        account={account}
-        handleAccountLogout={handleLogout}
-        currentTheme={currentTheme}
-        handleTheme={handleTheme}
-      />
+      <ForumAppBar />
       <Routes>
         <Route path="/forum" element={<ForumList />} />
-        <Route
-          path="/forum/create"
-          element={<ForumCreation account={account} />}
-        />
-        <Route
-          path="/signin"
-          element={<SignIn handleAccountLogin={handleLogin} />}
-        />
+        <Route path="/forum/create" element={<ForumCreation />} />
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/forum/:forumID" element={<Forum account={account} />} />
+        <Route path="/forum/:forumID" element={<Forum />} />
         <Route path="/*" element={<div>Page Not found</div>} />
       </Routes>
     </>

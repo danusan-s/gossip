@@ -1,3 +1,8 @@
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../hooks";
+
 import {
   Paper,
   Box,
@@ -9,11 +14,9 @@ import {
   IconButton,
 } from "@mui/material";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import Comments from "./Comments";
 import { styled } from "@mui/material/styles";
-import { useParams, useNavigate } from "react-router-dom";
+
+import Comments from "./Comments";
 import LocalTimeChip from "./LocalTimeChip";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -37,7 +40,7 @@ interface Forum {
   time: string;
 }
 
-export default function Forum({ account }: { account: string | null }) {
+export default function Forum() {
   const [forum, setForum] = useState<Forum>({
     id: 0,
     title: "",
@@ -57,6 +60,7 @@ export default function Forum({ account }: { account: string | null }) {
   }
 
   const navigate = useNavigate();
+  const account = useAppSelector((state) => state.account.value);
 
   useEffect(() => {
     const fetchForum = async () => {
@@ -178,7 +182,7 @@ export default function Forum({ account }: { account: string | null }) {
             </Box>
             <Typography variant="body1">{forum.description}</Typography>
           </Item>
-          <Comments forumId={id} account={account} />
+          <Comments forumId={id} />
         </Grid>
       </Grid>
       {renderMenu}

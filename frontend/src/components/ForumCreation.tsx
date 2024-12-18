@@ -8,13 +8,14 @@ import {
   Grid2 as Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../hooks";
 
 interface FormData {
   title: string;
   description: string;
 }
 
-export default function ForumCreation({ account }: { account: string | null }) {
+export default function ForumCreation() {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -37,6 +38,7 @@ export default function ForumCreation({ account }: { account: string | null }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const account = useAppSelector((state) => state.account.value);
     if (!account) {
       setError("Must be logged in to create post.");
       return;

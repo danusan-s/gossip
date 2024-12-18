@@ -2,16 +2,12 @@ import { useState } from "react";
 import axios from "axios";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import CommentList from "./CommentList";
+import { useAppSelector } from "../hooks";
 
-export default function Comments({
-  forumId,
-  account,
-}: {
-  forumId: number;
-  account: string | null;
-}) {
+export default function Comments({ forumId }: { forumId: number }) {
   const [formData, setFormData] = useState<string>("");
   const [renderTrigger, setRenderTrigger] = useState<boolean>(false);
+  const account = useAppSelector((state) => state.account.value);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(e.target.value);

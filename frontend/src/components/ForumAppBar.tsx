@@ -1,24 +1,34 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Switch from "@mui/material/Switch";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import AddIcon from "@mui/icons-material/Add";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import Button from "@mui/material/Button";
-import MoreIcon from "@mui/icons-material/MoreVert";
-import LoginIcon from "@mui/icons-material/Login";
-import LogoutIcon from "@mui/icons-material/Logout";
-import CreateIcon from "@mui/icons-material/Create";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../hooks";
+import { unsetAccount } from "../slices/account";
+import { toggleDarkTheme } from "../slices/theme";
+
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  MenuItem,
+  Menu,
+  Switch,
+  Button,
+} from "@mui/material";
+
+import {
+  Add as AddIcon,
+  Home as HomeIcon,
+  Search as SearchIcon,
+  AccountCircle,
+  MoreVert as MoreIcon,
+  Login as LoginIcon,
+  Logout as LogoutIcon,
+  Create as CreateIcon,
+} from "@mui/icons-material";
+
+import { styled, alpha } from "@mui/material/styles";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -115,17 +125,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function ForumAppBar({
-  account,
-  handleAccountLogout,
-  currentTheme,
-  handleTheme,
-}: {
-  account: string | null;
-  handleAccountLogout: CallableFunction;
-  currentTheme: boolean;
-  handleTheme: CallableFunction;
-}) {
+export default function ForumAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -133,6 +133,7 @@ export default function ForumAppBar({
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -162,14 +163,18 @@ export default function ForumAppBar({
   };
 
   const handleLogoutClick = () => {
-    handleAccountLogout();
+    dispatch(unsetAccount());
+    localStorage.removeItem("token");
     handleMenuClose();
     navigate("/forum");
   };
+
   const handleAccountProfile = () => {
     handleMenuClose();
     navigate("/profile");
   };
+
+  const account = useAppSelector((state) => state.account.value);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -255,12 +260,17 @@ export default function ForumAppBar({
       )}
       <MenuItem>
         <ThemeSwitch
-          checked={currentTheme}
+          checked={useAppSelector((state) => state.theme.value)}
           sx={{ transform: "translateX(-6px)" }}
-          onClick={() => handleTheme(!currentTheme)}
+          onClick={() => {
+            dispatch(toggleDarkTheme());
+          }}
         />
-        <Typography variant="button" onClick={() => handleTheme(!currentTheme)}>
-          Dark Theme
+        <Typography
+          variant="button"
+          onClick={() => dispatch(toggleDarkTheme())}
+        >
+          {useAppSelector((state) => state.theme.value) ? "Light" : "Dark"}
         </Typography>
       </MenuItem>
     </Menu>
@@ -300,8 +310,8 @@ export default function ForumAppBar({
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <ThemeSwitch
-                checked={currentTheme}
-                onChange={() => handleTheme(!currentTheme)}
+                checked={useAppSelector((state) => state.theme.value)}
+                onChange={() => dispatch(toggleDarkTheme())}
               ></ThemeSwitch>
             </Box>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>

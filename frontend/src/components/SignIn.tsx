@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import axios from "axios";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../hooks";
+import { setAccount } from "../slices/account";
 
-export default function SignIn({
-  handleAccountLogin,
-}: {
-  handleAccountLogin: CallableFunction;
-}) {
+export default function SignIn() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,7 +26,7 @@ export default function SignIn({
         formData,
       );
       localStorage.setItem("token", response.data.token);
-      handleAccountLogin(formData.username);
+      dispatch(setAccount(formData.username));
       navigate("/forum");
       setFormData({ username: "", password: "" });
     } catch (err) {
