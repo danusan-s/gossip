@@ -74,7 +74,7 @@ export default function ForumCreation({ account }: { account: string | null }) {
   };
 
   return (
-    <Box marginY="2rem">
+    <Box margin="2rem">
       <Grid container>
         <Grid size={{ xs: 12, sm: 8 }} offset={{ xs: 0, sm: 2 }}>
           <Box

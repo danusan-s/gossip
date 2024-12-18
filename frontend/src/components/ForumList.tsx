@@ -11,12 +11,14 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import LocalTimeChip from "./LocalTimeChip";
 
 interface Forum {
   id: number;
   title: string;
   description: string;
   author: string;
+  time: string;
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -73,10 +75,14 @@ export default function ForumList() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                marginBottom: "1rem",
               }}
             >
               <Typography variant="h6">{value.title}</Typography>
-              <Chip label={value.author} />
+              <Box>
+                <LocalTimeChip time={value.time} />
+                <Chip label={value.author} />
+              </Box>
             </Box>
             <Typography variant="body1">{value.description}</Typography>
           </Item>

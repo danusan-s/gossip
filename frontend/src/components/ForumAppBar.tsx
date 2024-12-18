@@ -15,6 +15,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Button from "@mui/material/Button";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import CreateIcon from "@mui/icons-material/Create";
 import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
@@ -115,10 +118,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function ForumAppBar({
   account,
   handleAccountLogout,
+  currentTheme,
   handleTheme,
 }: {
   account: string | null;
   handleAccountLogout: CallableFunction;
+  currentTheme: boolean;
   handleTheme: CallableFunction;
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -221,22 +226,42 @@ export default function ForumAppBar({
           handleMobileMenuClose();
         }}
       >
-        <IconButton size="large" aria-label="create new post" color="inherit">
-          <AddIcon />
-        </IconButton>
-        <p>Create New Post</p>
+        <AddIcon sx={{ marginRight: "1rem" }} />
+        <Typography variant="button">Create New Post</Typography>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+      {account !== null && (
+        <>
+          <MenuItem onClick={handleAccountProfile}>
+            <AccountCircle sx={{ marginRight: "1rem" }} />
+            <Typography variant="button">Profile</Typography>
+          </MenuItem>
+          <MenuItem onClick={handleLogoutClick}>
+            <LogoutIcon sx={{ marginRight: "1rem" }} />
+            <Typography variant="button">Log out</Typography>
+          </MenuItem>
+        </>
+      )}
+      {account === null && (
+        <>
+          <MenuItem onClick={handleAccountSignIn}>
+            <LoginIcon sx={{ marginRight: "1rem" }} />
+            <Typography variant="button">Log In</Typography>
+          </MenuItem>
+          <MenuItem onClick={handleAccountSignUp}>
+            <CreateIcon sx={{ marginRight: "1rem" }} />
+            <Typography variant="button">Sign up</Typography>
+          </MenuItem>
+        </>
+      )}
+      <MenuItem>
+        <ThemeSwitch
+          checked={currentTheme}
+          sx={{ transform: "translateX(-6px)" }}
+          onClick={() => handleTheme(!currentTheme)}
+        />
+        <Typography variant="button" onClick={() => handleTheme(!currentTheme)}>
+          Dark Theme
+        </Typography>
       </MenuItem>
     </Menu>
   );
@@ -248,6 +273,7 @@ export default function ForumAppBar({
           <Toolbar>
             <IconButton
               sx={{ display: { xs: "flex", sm: "none" }, marginRight: "1rem" }}
+              color="inherit"
               onClick={() => navigate("/forum")}
             >
               <HomeIcon />
@@ -274,7 +300,8 @@ export default function ForumAppBar({
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <ThemeSwitch
-                onChange={(event) => handleTheme(event.target.checked)}
+                checked={currentTheme}
+                onChange={() => handleTheme(!currentTheme)}
               ></ThemeSwitch>
             </Box>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>

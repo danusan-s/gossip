@@ -8,8 +8,10 @@ import Forum from "../components/Forum";
 import { Route, Routes } from "react-router-dom";
 
 export default function ForumPage({
+  currentTheme,
   handleTheme,
 }: {
+  currentTheme: boolean;
   handleTheme: CallableFunction;
 }) {
   const [account, setAccount] = useState<string | null>(null);
@@ -65,6 +67,7 @@ export default function ForumPage({
       <ForumAppBar
         account={account}
         handleAccountLogout={handleLogout}
+        currentTheme={currentTheme}
         handleTheme={handleTheme}
       />
       <Routes>

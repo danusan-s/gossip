@@ -3,12 +3,6 @@ import axios from "axios";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import CommentList from "./CommentList";
 
-interface Comment {
-  id: number;
-  author: string;
-  content: string;
-}
-
 export default function Comments({
   forumId,
   account,
@@ -58,6 +52,7 @@ export default function Comments({
       alert("Failed to submit data.");
     }
   };
+
   return (
     <Box sx={{ margin: "2rem 0" }}>
       <Box
@@ -89,7 +84,11 @@ export default function Comments({
       <Typography variant="h6" margin="1rem">
         Comments:
       </Typography>
-      {CommentList({ forumId, renderTrigger })}
+      <CommentList
+        account={account}
+        forumId={forumId}
+        renderTrigger={renderTrigger}
+      />
     </Box>
   );
 }

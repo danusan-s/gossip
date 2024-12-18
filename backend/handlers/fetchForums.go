@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -15,12 +16,7 @@ type ForumGet struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Author      string `json:"author"`
-}
-
-type ForumCreate struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Author      string `json:"author"`
+	Time        string `json:"time"`
 }
 
 // GetAllForumsHandler retrieves all forums from the database
@@ -34,7 +30,7 @@ func GetAllForumsHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		rows, err := db.Query("SELECT id, title, description, author FROM forums")
+		rows, err := db.Query("SELECT id, title, description, author, created_at FROM forums")
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
 			log.Println("Error querying database:", err)
@@ -45,11 +41,13 @@ func GetAllForumsHandler(db *sql.DB) http.HandlerFunc {
 		var forums []ForumGet
 		for rows.Next() {
 			var forum ForumGet
-			if err := rows.Scan(&forum.ID, &forum.Title, &forum.Description, &forum.Author); err != nil {
+			var forumTime time.Time
+			if err := rows.Scan(&forum.ID, &forum.Title, &forum.Description, &forum.Author, &forumTime); err != nil {
 				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
 				log.Println("Error parsing database row:", err)
 				return
 			}
+			forum.Time = forumTime.Format(time.RFC3339)
 			forums = append(forums, forum)
 		}
 
@@ -91,16 +89,18 @@ func GetForumByIDHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT title, description, author FROM forums WHERE id = ?"
+		query := "SELECT title, description, author, created_at FROM forums WHERE id = ?"
 		row := db.QueryRow(query, id)
 
 		var forum ForumGet
 		forum.ID = id
-		if err := row.Scan(&forum.Title, &forum.Description, &forum.Author); err != nil {
+		var forumTime time.Time
+		if err := row.Scan(&forum.Title, &forum.Description, &forum.Author, &forumTime); err != nil {
 			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
 			log.Println("Error parsing database row:", err)
 			return
 		}
+		forum.Time = forumTime.Format(time.RFC3339)
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(forum); err != nil {
@@ -112,40 +112,40 @@ func GetForumByIDHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-// CreateForumHandler handles the creation of a new forum
-func CreateForumHandler(db *sql.DB) http.HandlerFunc {
+// GetForumsByUserHandler retrieves all forums by a specific user from the database
+func GetForumsByUserHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for CreateForum")
+		log.Println("Received request for GetForumByID")
 
-		if r.Method != http.MethodPost {
+		vars := mux.Vars(r)
+		user := vars["user"]
+		log.Printf("Username: %s", user)
+
+		if r.Method != http.MethodGet {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			log.Println("Method not allowed")
 			return
 		}
 
-		var body ForumCreate
-		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-			http.Error(w, "Invalid request body", http.StatusBadRequest)
-			log.Println("Error decoding request body:", err)
+		query := "SELECT id, title, description, created_at FROM forums WHERE author = ?"
+		row := db.QueryRow(query, user)
+
+		var forum ForumGet
+		forum.Author = user
+		var forumTime time.Time
+		if err := row.Scan(&forum.ID, &forum.Title, &forum.Description, &forumTime); err != nil {
+			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
+			log.Println("Error parsing database row:", err)
 			return
 		}
+		forum.Time = forumTime.Format(time.RFC3339)
 
-		if body.Title == "" || body.Description == "" {
-			http.Error(w, "Title and Description are required", http.StatusBadRequest)
-			log.Println("Title or Description is missing")
-			return
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(forum); err != nil {
+			http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
+			log.Println("Error encoding JSON:", err)
 		}
 
-		query := "INSERT INTO forums (title, description, author) VALUES (?, ?, ?)"
-		_, err := db.Exec(query, body.Title, body.Description, body.Author)
-		if err != nil {
-			http.Error(w, "Failed to insert data", http.StatusInternalServerError)
-			log.Println("Error inserting data into database:", err)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"message":"Data successfully submitted"}`))
-		log.Println("Forum created successfully")
+		log.Printf("Successfully fetched forum with author %s", forum.Author)
 	}
 }

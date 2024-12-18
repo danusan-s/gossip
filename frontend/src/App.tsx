@@ -18,15 +18,20 @@ const lightTheme = createTheme({
 });
 
 export default function App() {
-  const [dark, setDark] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
 
   return (
-    <ThemeProvider theme={dark ? darkTheme : lightTheme}>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <CssBaseline />
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/*" element={<ForumPage handleTheme={setDark} />} />
+          <Route
+            path="/*"
+            element={
+              <ForumPage currentTheme={darkMode} handleTheme={setDarkMode} />
+            }
+          />
         </Routes>
       </Router>
     </ThemeProvider>
