@@ -7,7 +7,11 @@ import SignUp from "../components/SignUp";
 import Forum from "../components/Forum";
 import { Route, Routes } from "react-router-dom";
 
-export default function ForumPage() {
+export default function ForumPage({
+  handleTheme,
+}: {
+  handleTheme: CallableFunction;
+}) {
   const [account, setAccount] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -58,7 +62,11 @@ export default function ForumPage() {
 
   return (
     <>
-      <ForumAppBar account={account} handleAccountLogout={handleLogout} />
+      <ForumAppBar
+        account={account}
+        handleAccountLogout={handleLogout}
+        handleTheme={handleTheme}
+      />
       <Routes>
         <Route path="/forum" element={<ForumList />} />
         <Route
