@@ -5,7 +5,7 @@ import ForumCreation from "../components/ForumCreation";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
 import Forum from "../components/Forum";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 export default function ForumPage() {
   const [account, setAccount] = useState<string | null>(null);
@@ -57,7 +57,7 @@ export default function ForumPage() {
   if (loading) return <div>Loading User...</div>;
 
   return (
-    <Router>
+    <>
       <ForumAppBar account={account} handleAccountLogout={handleLogout} />
       <Routes>
         <Route path="/forum" element={<ForumList />} />
@@ -71,7 +71,8 @@ export default function ForumPage() {
         />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forum/:forumID" element={<Forum account={account} />} />
+        <Route path="/*" element={<div>Page Not found</div>} />
       </Routes>
-    </Router>
+    </>
   );
 }

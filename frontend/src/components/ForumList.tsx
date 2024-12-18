@@ -59,29 +59,33 @@ export default function ForumList() {
   if (loading) return <div>Loading forums...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const list = forums.map((value) => {
-    return (
-      <Button
-        style={{ width: "100%" }}
-        onClick={() => navigate(`/forums/${value.id}`)}
-        key={value.id}
-      >
-        <Item>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h6">{value.title}</Typography>
-            <Chip label={value.author} />
-          </Box>
-          <Typography variant="body1">{value.description}</Typography>
-        </Item>
-      </Button>
-    );
-  });
+  const list = forums ? (
+    forums.map((value) => {
+      return (
+        <Button
+          style={{ width: "100%" }}
+          onClick={() => navigate(`/forum/${value.id}`)}
+          key={value.id}
+        >
+          <Item>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h6">{value.title}</Typography>
+              <Chip label={value.author} />
+            </Box>
+            <Typography variant="body1">{value.description}</Typography>
+          </Item>
+        </Button>
+      );
+    })
+  ) : (
+    <div>No forums found</div>
+  );
 
   return (
     <Box sx={{ margin: "1rem" }}>
