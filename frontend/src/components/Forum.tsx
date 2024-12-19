@@ -35,12 +35,12 @@ export default function Forum() {
     time: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchForum = async () => {
       try {
-        const response = await axios.get<Forum>(
-          `http://localhost:8080/api/forums/${forumID}`,
-        );
+        const response = await axios.get<Forum>(`${apiUrl}/forums/${forumID}`);
         setForum(response.data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");

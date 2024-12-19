@@ -27,7 +27,6 @@ It uses a MySQL database to store the forums and all other relevant data.
 
 3. Create a `.env` file in the `frontend` directory and add the following environment variables:
     - `REACT_APP_BACKEND_URL` - The URL of the backend server.
-    - `REACT_APP_PORT` - The port you want the frontend server to run on.
 
 4. You will need to have a MySQL server running on your machine.
 
@@ -37,8 +36,10 @@ It uses a MySQL database to store the forums and all other relevant data.
     - `DB_USER` - Your MySQL username (Set as root if you are using a docker container).
     - `DB_PASSWORD` - Your MySQL password (Set as the password you set for the root user if you are using a docker container).
     - `DB_NAME` - The name of the database you want to use (Set as the name of the database you created if you are using a docker container).
+    - `DB_HOST` - The host of the MySQL server (The IP address of the MySQL server if you are using a docker container).
+    - `DB_PORT` - The port of the MySQL server (Set as 3306 if you are using a docker container).
     - `JWT_SECRET` - A secret key for JWT. (Key used for signing JWT tokens).
-    - `PORT` - The port you want the backend server to run 
+    - `PORT` - The port you want the backend server to run on.
 
 7. Navigate to the `backend` directory and run `go run main.go` to start the backend server (This will install dependencies on its own).
 

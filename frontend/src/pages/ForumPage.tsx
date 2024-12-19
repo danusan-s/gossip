@@ -13,9 +13,11 @@ export default function ForumPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const verifyToken = async (token: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/login/token", {
+      const response = await fetch(`${apiUrl}/login/token`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -24,7 +26,7 @@ export default function ForumPage() {
 
       if (response.ok) {
         const userData = await response.json();
-        setAccount(userData.user); // Set the user data from backend
+        dispatch(setAccount(userData.user));
       } else {
         console.error("Token verification failed");
         dispatch(unsetAccount());

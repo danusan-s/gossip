@@ -16,11 +16,18 @@ interface Forum {
   time: string;
 }
 
-export default function ForumSingle({ forumData }: { forumData: Forum }) {
+export default function ForumSingle({
+  forumData,
+  menuDisabled = false,
+}: {
+  forumData: Forum;
+  menuDisabled?: boolean;
+}) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
   const account = useAppSelector((state) => state.account.value);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,7 +49,7 @@ export default function ForumSingle({ forumData }: { forumData: Forum }) {
       // Assuming the JWT is stored in localStorage
       const token = localStorage.getItem("token");
 
-      await axios.delete(`http://localhost:8080/api/forums/${forumData.id}`, {
+      await axios.delete(`${apiUrl}/forums/${forumData.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -104,17 +111,19 @@ export default function ForumSingle({ forumData }: { forumData: Forum }) {
         <Box>
           <LocalTimeChip time={forumData.time} />
           <Chip label={forumData.author} />
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="post options"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleMenuOpen}
-            color="inherit"
-          >
-            <MoreIcon />
-          </IconButton>
+          {!menuDisabled && (
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="post options"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          )}
         </Box>
       </Box>
       <Typography variant="body1">{forumData.description}</Typography>

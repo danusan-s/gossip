@@ -2,7 +2,6 @@ import Chip from "@mui/material/Chip";
 
 export default function LocalTimeChip({ time }: { time: string }) {
   const convertToLocalTime = (time: string) => {
-    console.log("Time:", time);
     const date = new Date(time);
     return date.toLocaleString([], {
       day: "2-digit",

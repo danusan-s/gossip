@@ -19,12 +19,12 @@ export default function ForumList() {
 
   const navigate = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchForums = async () => {
       try {
-        const response = await axios.get<Forum[]>(
-          "http://localhost:8080/api/forums",
-        );
+        const response = await axios.get<Forum[]>(`${apiUrl}/forums`);
         setForums(response.data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -47,7 +47,7 @@ export default function ForumList() {
           onClick={() => navigate(`/forum/${value.id}`)}
           key={value.id}
         >
-          <ForumSingle forumData={value} />
+          <ForumSingle forumData={value} menuDisabled={true} />
         </Button>
       );
     })

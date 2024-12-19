@@ -11,6 +11,7 @@ export default function SignUp() {
   });
 
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +20,7 @@ export default function SignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/api/register", formData);
+      await axios.post(`${apiUrl}/register`, formData);
       navigate("/signin");
     } catch (err) {
       alert("Error registering user.");

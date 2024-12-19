@@ -25,6 +25,7 @@ export default function ForumCreation() {
 
   const navigate = useNavigate();
   const account = useAppSelector((state) => state.account.value);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -55,7 +56,7 @@ export default function ForumCreation() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:8080/api/forums",
+        `${apiUrl}/forums`,
         {
           ...formData,
           author: account,

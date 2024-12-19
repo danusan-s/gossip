@@ -26,10 +26,12 @@ export default function CommentList({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const fetchComments = async () => {
     try {
       const response = await axios.get<Comment[]>(
-        `http://localhost:8080/api/forums/${forumId}/comments`,
+        `${apiUrl}/forums/${forumId}/comments`,
       );
       setComments(response.data);
     } catch (err) {
@@ -48,7 +50,7 @@ export default function CommentList({
       // Assuming the JWT is stored in localStorage
       const token = localStorage.getItem("token");
 
-      await axios.delete(`http://localhost:8080/api/comments/${id}`, {
+      await axios.delete(`${apiUrl}/comments/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

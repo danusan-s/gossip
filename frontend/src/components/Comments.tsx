@@ -8,6 +8,7 @@ export default function Comments({ forumId }: { forumId: number }) {
   const [formData, setFormData] = useState<string>("");
   const [renderTrigger, setRenderTrigger] = useState<boolean>(false);
   const account = useAppSelector((state) => state.account.value);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(e.target.value);
@@ -29,7 +30,7 @@ export default function Comments({ forumId }: { forumId: number }) {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `http://localhost:8080/api/forums/${forumId}/comments`,
+        `${apiUrl}/forums/${forumId}/comments`,
         {
           content: formData,
           author: account,

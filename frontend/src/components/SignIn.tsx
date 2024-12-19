@@ -13,6 +13,7 @@ export default function SignIn() {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,10 +22,7 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/login",
-        formData,
-      );
+      const response = await axios.post(`${apiUrl}/login`, formData);
       localStorage.setItem("token", response.data.token);
       dispatch(setAccount(formData.username));
       navigate("/forum");
