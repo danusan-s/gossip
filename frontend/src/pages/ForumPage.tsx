@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ForumAppBar from "../components/ForumAppBar";
+import MainAppBar from "../components/MainAppBar";
 import ForumList from "../components/ForumList";
 import ForumCreation from "../components/ForumCreation";
 import SignIn from "../components/SignIn";
@@ -51,7 +51,7 @@ export default function ForumPage() {
 
   return (
     <>
-      <ForumAppBar />
+      <MainAppBar />
       <Routes>
         <Route path="/forum" element={<ForumList />} />
         <Route path="/forum/create" element={<ForumCreation />} />

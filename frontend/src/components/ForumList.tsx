@@ -1,17 +1,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Paper,
-  Grid2 as Grid,
-  Stack,
-  Typography,
-  Button,
-  Chip,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Grid2 as Grid, Stack, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import LocalTimeChip from "./LocalTimeChip";
+import ForumSingle from "./ForumSingle";
 
 interface Forum {
   id: number;
@@ -20,19 +11,6 @@ interface Forum {
   author: string;
   time: string;
 }
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  width: "100%",
-  ...theme.typography.body2,
-  padding: theme.spacing(3),
-  textAlign: "left",
-  textTransform: "none",
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
 
 export default function ForumList() {
   const [forums, setForums] = useState<Forum[]>([]);
@@ -69,23 +47,7 @@ export default function ForumList() {
           onClick={() => navigate(`/forum/${value.id}`)}
           key={value.id}
         >
-          <Item>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1rem",
-              }}
-            >
-              <Typography variant="h6">{value.title}</Typography>
-              <Box>
-                <LocalTimeChip time={value.time} />
-                <Chip label={value.author} />
-              </Box>
-            </Box>
-            <Typography variant="body1">{value.description}</Typography>
-          </Item>
+          <ForumSingle forumData={value} />
         </Button>
       );
     })

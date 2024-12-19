@@ -24,6 +24,7 @@ export default function ForumCreation() {
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const account = useAppSelector((state) => state.account.value);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -38,7 +39,6 @@ export default function ForumCreation() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const account = useAppSelector((state) => state.account.value);
     if (!account) {
       setError("Must be logged in to create post.");
       return;

@@ -1,22 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Chip, Typography, Stack, Paper, Box, IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Chip, Typography, Stack, Box, IconButton } from "@mui/material";
 import LocalTimeChip from "./LocalTimeChip";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  width: "100%",
-  ...theme.typography.body2,
-  padding: theme.spacing(3),
-  textAlign: "left",
-  textTransform: "none",
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
+import Item from "./Item";
 
 interface Comment {
   id: number;

@@ -3,34 +3,11 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../hooks";
 
-import {
-  Paper,
-  Box,
-  Typography,
-  Chip,
-  Grid2 as Grid,
-  Menu,
-  MenuItem,
-  IconButton,
-} from "@mui/material";
-import MoreIcon from "@mui/icons-material/MoreVert";
-import { styled } from "@mui/material/styles";
+import { Box, Grid2 as Grid, Menu, MenuItem, Typography } from "@mui/material";
+import Item from "./Item";
+import ForumSingle from "./ForumSingle";
 
 import Comments from "./Comments";
-import LocalTimeChip from "./LocalTimeChip";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  width: "100%",
-  ...theme.typography.body2,
-  padding: theme.spacing(3),
-  textAlign: "left",
-  textTransform: "none",
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
 
 interface Forum {
   id: number;
@@ -41,6 +18,15 @@ interface Forum {
 }
 
 export default function Forum() {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const { forumID } = useParams<{ forumID: string }>();
+  const id = parseInt(forumID || "", 10);
+  if (isNaN(id)) {
+    return <div>Invalid forum ID</div>;
+  }
+
   const [forum, setForum] = useState<Forum>({
     id: 0,
     title: "",
@@ -48,25 +34,12 @@ export default function Forum() {
     author: "",
     time: "",
   });
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [copied, setCopied] = useState(false);
-  const { forumID } = useParams<{ forumID: string }>();
-  const id = parseInt(forumID || "", 10);
-
-  if (isNaN(id)) {
-    return <div>Invalid forum ID</div>;
-  }
-
-  const navigate = useNavigate();
-  const account = useAppSelector((state) => state.account.value);
 
   useEffect(() => {
     const fetchForum = async () => {
       try {
         const response = await axios.get<Forum>(
-          `http://localhost:8080/api/forums/${id}`,
+          `http://localhost:8080/api/forums/${forumID}`,
         );
         setForum(response.data);
       } catch (err) {
@@ -77,115 +50,32 @@ export default function Forum() {
     };
 
     fetchForum();
-  }, [id]);
+  }, [forumID]);
+
+  if (loading)
+    return (
+      <Item>
+        <Typography variant="h6">Loading forum...</Typography>
+      </Item>
+    );
+  if (error)
+    return (
+      <Item>
+        <Typography variant="h6">Error: {error}</Typography>
+      </Item>
+    );
 
   if (loading) return <div>Loading forums...</div>;
   if (error) return <div>Error: {error}</div>;
-
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const isMenuOpen = Boolean(anchorEl);
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDelete = async () => {
-    if (account !== forum.author) {
-      alert("You do not have permission to delete this forum.");
-      return;
-    }
-
-    try {
-      // Assuming the JWT is stored in localStorage
-      const token = localStorage.getItem("token");
-
-      await axios.delete(`http://localhost:8080/api/forums/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      navigate("/forum");
-    } catch (err) {
-      console.error("Error sending request:", err);
-      alert("Failed to delete forum.");
-    }
-  };
-
-  const handleCopyLink = () => {
-    const link = window.location.href; // Get the current page URL
-    navigator.clipboard.writeText(link).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 4000);
-    });
-    handleMenuClose();
-  };
-
-  const menuId = "forum-options-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <>
-        {account === forum.author && (
-          <MenuItem onClick={handleDelete}>Delete Forum</MenuItem>
-        )}
-        <MenuItem disabled={copied} onClick={handleCopyLink}>
-          {copied ? "Link Copied!" : "Copy Link"}
-        </MenuItem>
-      </>
-    </Menu>
-  );
 
   return (
     <Box sx={{ margin: "2rem" }}>
       <Grid container>
         <Grid size={{ xs: 12, sm: 8 }} offset={{ xs: 0, sm: 2 }}>
-          <Item>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h6">{forum.title}</Typography>
-              <Box>
-                <LocalTimeChip time={forum.time} />
-                <Chip label={forum.author} />
-                <IconButton
-                  size="large"
-                  edge="end"
-                  aria-label="post options"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleMenuOpen}
-                  color="inherit"
-                >
-                  <MoreIcon />
-                </IconButton>
-              </Box>
-            </Box>
-            <Typography variant="body1">{forum.description}</Typography>
-          </Item>
+          <ForumSingle forumData={forum} />
           <Comments forumId={id} />
         </Grid>
       </Grid>
-      {renderMenu}
     </Box>
   );
 }
