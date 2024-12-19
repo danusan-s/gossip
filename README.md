@@ -26,7 +26,7 @@ It uses a MySQL database to store the forums and all other relevant data.
 2. Navigate to the `frontend` directory and run `npm install` to install all the necessary dependencies.
 
 3. Create a `.env` file in the `frontend` directory and add the following environment variables:
-    - `REACT_APP_BACKEND_URL` - The URL of the backend server.
+    - `VITE_API_URL` - The URL of the backend server. (Set as `http://localhost:<PORT>/api` if you are running the backend server locally).
 
 4. You will need to have a MySQL server running on your machine.
 
