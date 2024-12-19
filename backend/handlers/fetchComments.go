@@ -40,7 +40,7 @@ func GetCommentsByForumHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT id, content, author, created_at FROM comments WHERE forum_id = ?"
+		query := "SELECT id, content, author, created_at FROM comments WHERE forum_id=?"
 		rows, err := db.Query(query, forumID)
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
@@ -94,7 +94,7 @@ func GetCommentsByUserHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT id,forum_id, content, created_at FROM comments WHERE author = ?"
+		query := "SELECT id,forum_id, content, created_at FROM comments WHERE author=?"
 		rows, err := db.Query(query, user)
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)

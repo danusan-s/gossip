@@ -33,6 +33,8 @@ func main() {
 	}
 	defer database.Close()
 
+	db.CreateTables(database)
+
 	// Set up routes
 	mux := routes.SetupRoutes(database)
 

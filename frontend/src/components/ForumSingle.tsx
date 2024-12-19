@@ -7,6 +7,7 @@ import { useAppSelector } from "../hooks";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LocalTimeChip from "./LocalTimeChip";
 import Item from "./Item";
+import ReactionBox from "./Reactions";
 
 interface Forum {
   id: number;
@@ -127,6 +128,7 @@ export default function ForumSingle({
         </Box>
       </Box>
       <Typography variant="body1">{forumData.description}</Typography>
+      {!menuDisabled && <ReactionBox id={forumData.id} type={"forums"} />}
       {renderMenu}
     </Item>
   );

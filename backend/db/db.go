@@ -39,5 +39,6 @@ func Connect() (*sql.DB, error) {
 	}
 
 	fmt.Println("Successfully connected to the database")
+
 	return db, nil
 }
