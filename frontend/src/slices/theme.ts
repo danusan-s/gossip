@@ -7,7 +7,9 @@ export interface ThemeState {
 export const themeSlice = createSlice({
   name: "theme",
   initialState: {
-    value: false,
+    value: window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? true
+      : false,
   },
   reducers: {
     toggleDarkTheme: (state) => {
