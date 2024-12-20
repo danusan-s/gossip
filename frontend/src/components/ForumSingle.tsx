@@ -19,10 +19,10 @@ interface Forum {
 
 export default function ForumSingle({
   forumData,
-  menuDisabled = false,
+  focused = true,
 }: {
   forumData: Forum;
-  menuDisabled?: boolean;
+  focused?: boolean;
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [copied, setCopied] = useState(false);
@@ -112,7 +112,7 @@ export default function ForumSingle({
         <Box>
           <LocalTimeChip time={forumData.time} />
           <Chip label={forumData.author} />
-          {!menuDisabled && (
+          {focused && (
             <IconButton
               size="large"
               edge="end"
@@ -127,8 +127,12 @@ export default function ForumSingle({
           )}
         </Box>
       </Box>
-      <Typography variant="body1">{forumData.description}</Typography>
-      {!menuDisabled && <ReactionBox id={forumData.id} type={"forums"} />}
+      {focused && (
+        <>
+          <Typography variant="body1">{forumData.description}</Typography>
+          <ReactionBox id={forumData.id} type={"forums"} />
+        </>
+      )}
       {renderMenu}
     </Item>
   );

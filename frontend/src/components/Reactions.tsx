@@ -29,17 +29,31 @@ export default function ReactionBox({
       alert("You must be logged in to react to a post.");
       return;
     }
+    if (reaction === "like") {
+      setLikeCount(likeCount - 1);
+    } else if (reaction === "dislike") {
+      setDislikeCount(dislikeCount - 1);
+    }
+
+    if (newReaction === "like") {
+      setLikeCount(likeCount + 1);
+    } else if (newReaction === "dislike") {
+      setDislikeCount(dislikeCount + 1);
+    }
 
     setReaction(newReaction);
     updateReaction(newReaction);
   };
 
+  // Decided not to fetch everytime the reaction changes
+  // This is a lot of unnecessary requests
+  // Also this caused a few artifacts due to the async nature of the requests
   useEffect(() => {
     const fetchReaction = async () => {
       try {
         const response = await axios.get(`${apiUrl}/${type}/${id}/reactions`);
-        setLikeCount(response.data.like);
-        setDislikeCount(response.data.dislike);
+        setLikeCount(parseInt(response.data.like));
+        setDislikeCount(parseInt(response.data.dislike));
       } catch (err) {
         console.error("Error sending request:", err);
         alert("Failed to fetch reaction.");
@@ -61,7 +75,6 @@ export default function ReactionBox({
             },
           },
         );
-        console.log(response.data);
         if (response.data.reaction === "1") {
           setReaction("like");
         } else if (response.data.reaction === "0") {
@@ -77,10 +90,9 @@ export default function ReactionBox({
 
     fetchReaction();
     fetchUserReaction();
-  }, [reaction]);
+  }, []);
 
   const updateReaction = async (newReaction: string | null) => {
-    console.log(newReaction);
     if (newReaction === null) {
       try {
         const token = localStorage.getItem("token");
@@ -116,6 +128,7 @@ export default function ReactionBox({
       }
     }
   };
+
   return (
     <ToggleButtonGroup
       value={reaction}

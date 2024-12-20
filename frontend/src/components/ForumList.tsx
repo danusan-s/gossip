@@ -47,7 +47,7 @@ export default function ForumList() {
           onClick={() => navigate(`/forum/${value.id}`)}
           key={value.id}
         >
-          <ForumSingle forumData={value} menuDisabled={true} />
+          <ForumSingle forumData={value} focused={false} />
         </Button>
       );
     })

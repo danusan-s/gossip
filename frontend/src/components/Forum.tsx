@@ -1,13 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../hooks";
+import { useParams } from "react-router-dom";
 
-import { Box, Grid2 as Grid, Menu, MenuItem, Typography } from "@mui/material";
+import { Box, Grid2 as Grid, Typography } from "@mui/material";
 import Item from "./Item";
 import ForumSingle from "./ForumSingle";
 
-import Comments from "./Comments";
+import CommentList from "./CommentList";
 
 interface Forum {
   id: number;
@@ -73,7 +72,7 @@ export default function Forum() {
       <Grid container>
         <Grid size={{ xs: 12, sm: 8 }} offset={{ xs: 0, sm: 2 }}>
           <ForumSingle forumData={forum} />
-          <Comments forumId={id} />
+          <CommentList forumId={id} />
         </Grid>
       </Grid>
     </Box>

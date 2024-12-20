@@ -12,7 +12,7 @@ func CreateTables(db *sql.DB) error {
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     author VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );`
 
 	createUsersTableSQL := `
@@ -21,7 +21,7 @@ func CreateTables(db *sql.DB) error {
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );`
 
 	createCommentsTableSQL := `
@@ -30,7 +30,7 @@ func CreateTables(db *sql.DB) error {
     forum_id INT NOT NULL,
     content TEXT NOT NULL,
     author VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );`
 
 	createForumReactionsTableSQL := `
@@ -38,8 +38,9 @@ func CreateTables(db *sql.DB) error {
     user_id VARCHAR(50) NOT NULL,
     forum_id INT NOT NULL,
     state TINYINT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, forum_id)
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, forum_id),
+    FOREIGN KEY (forum_id) REFERENCES forums(id) ON DELETE CASCADE
 );`
 
 	createCommentReactionsTableSQL := `
@@ -47,8 +48,9 @@ func CreateTables(db *sql.DB) error {
     user_id VARCHAR(50) NOT NULL,
     comment_id BIGINT UNSIGNED NOT NULL,
     state TINYINT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, comment_id)
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, comment_id),
+    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
 );`
 
 	_, err := db.Exec(createForumsTableSQL)

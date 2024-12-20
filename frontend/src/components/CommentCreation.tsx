@@ -1,12 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
-import { Box, Typography, TextField, Button } from "@mui/material";
-import CommentList from "./CommentList";
+import { Box, TextField, Button } from "@mui/material";
 import { useAppSelector } from "../hooks";
 
-export default function Comments({ forumId }: { forumId: number }) {
+export default function Comments({
+  forumId,
+  handleNewComment,
+}: {
+  forumId: number;
+  handleNewComment: CallableFunction;
+}) {
   const [formData, setFormData] = useState<string>("");
-  const [renderTrigger, setRenderTrigger] = useState<boolean>(false);
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -42,7 +46,7 @@ export default function Comments({ forumId }: { forumId: number }) {
         },
       );
       console.log("Response:", response.data);
-      setRenderTrigger(!renderTrigger);
+      handleNewComment();
       setFormData("");
     } catch (err) {
       console.error("Error sending data:", err);
@@ -51,41 +55,31 @@ export default function Comments({ forumId }: { forumId: number }) {
   };
 
   return (
-    <Box sx={{ margin: "2rem 0" }}>
-      <Box
-        component="form"
-        onSubmit={handleCommentSubmit}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          padding: 2,
-          border: "1px solid #ccc",
-          borderRadius: 2,
-          boxShadow: 2,
-        }}
-      >
-        <TextField
-          label="Comment"
-          name="content"
-          onChange={handleChange}
-          value={formData}
-          placeholder="Leave a comment"
-          required
-          fullWidth
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Reply
-        </Button>
-      </Box>
-      <Typography variant="h6" margin="1rem">
-        Comments:
-      </Typography>
-      <CommentList
-        account={account}
-        forumId={forumId}
-        renderTrigger={renderTrigger}
+    <Box
+      component="form"
+      onSubmit={handleCommentSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        padding: 2,
+        border: "1px solid #ccc",
+        borderRadius: 2,
+        boxShadow: 2,
+      }}
+    >
+      <TextField
+        label="Comment"
+        name="content"
+        onChange={handleChange}
+        value={formData}
+        placeholder="Leave a comment"
+        required
+        fullWidth
       />
+      <Button type="submit" variant="contained" color="primary">
+        Reply
+      </Button>
     </Box>
   );
 }
