@@ -1,7 +1,7 @@
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const Item = styled(Paper)(({ theme }) => ({
+const Hoverable = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   width: "100%",
   ...theme.typography.body2,
@@ -9,6 +9,9 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "left",
   textTransform: "none",
   color: theme.palette.text.secondary,
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
 }));
 
-export default Item;
+export default Hoverable;

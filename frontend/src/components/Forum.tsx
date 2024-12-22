@@ -71,7 +71,9 @@ export default function Forum() {
     <Box sx={{ margin: "2rem" }}>
       <Grid container>
         <Grid size={{ xs: 12, sm: 8 }} offset={{ xs: 0, sm: 2 }}>
-          <ForumSingle forumData={forum} />
+          <Item>
+            <ForumSingle forumData={forum} />
+          </Item>
           <CommentList forumId={id} />
         </Grid>
       </Grid>

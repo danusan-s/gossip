@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../hooks";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LocalTimeChip from "./LocalTimeChip";
-import Item from "./Item";
 import ReactionBox from "./Reactions";
 
 interface Forum {
@@ -100,40 +99,60 @@ export default function ForumSingle({
   );
 
   return (
-    <Item>
+    <>
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
         }}
       >
-        <Typography variant="h6">{forumData.title}</Typography>
-        <Box>
-          <LocalTimeChip time={forumData.time} />
-          <Chip label={forumData.author} />
-          {focused && (
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="post options"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          )}
-        </Box>
+        <Chip label={forumData.author} />
+        <LocalTimeChip time={forumData.time} />
       </Box>
-      {focused && (
-        <>
-          <Typography variant="body1">{forumData.description}</Typography>
-          <ReactionBox id={forumData.id} type={"forums"} />
-        </>
-      )}
+      <Typography
+        variant="h6"
+        {...(!focused && {
+          sx: {
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          },
+        })}
+      >
+        {forumData.title}
+      </Typography>
+      <Typography
+        variant="body1"
+        {...(!focused && {
+          sx: {
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            WebkitLineClamp: 5,
+            lineHeight: "1.5em",
+          },
+        })}
+      >
+        {forumData.description}
+      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <ReactionBox id={forumData.id} type={"forums"} />
+        {focused && (
+          <IconButton
+            size="large"
+            edge="end"
+            aria-label="post options"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={handleMenuOpen}
+            color="inherit"
+          >
+            <MoreIcon />
+          </IconButton>
+        )}
+      </Box>
       {renderMenu}
-    </Item>
+    </>
   );
 }

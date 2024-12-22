@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Box, Grid2 as Grid, Stack, Button } from "@mui/material";
+import { Box, Grid2 as Grid, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ForumSingle from "./ForumSingle";
+import Hoverable from "./Hoverable";
 
 interface Forum {
   id: number;
@@ -42,13 +43,12 @@ export default function ForumList() {
   const list = forums ? (
     forums.map((value) => {
       return (
-        <Button
-          style={{ width: "100%" }}
+        <Hoverable
           onClick={() => navigate(`/forum/${value.id}`)}
           key={value.id}
         >
           <ForumSingle forumData={value} focused={false} />
-        </Button>
+        </Hoverable>
       );
     })
   ) : (

@@ -4,6 +4,8 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import axios from "axios";
 import { useAppSelector } from "../hooks";
+import ThumbUpOutlineIcon from "@mui/icons-material/ThumbUpOutlined";
+import ThumbDownOutlineIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import Typography from "@mui/material/Typography";
@@ -25,6 +27,7 @@ export default function ReactionBox({
     event: React.MouseEvent<HTMLElement>,
     newReaction: string | null,
   ) => {
+    event.stopPropagation();
     if (account === null) {
       alert("You must be logged in to react to a post.");
       return;
@@ -132,21 +135,32 @@ export default function ReactionBox({
   return (
     <ToggleButtonGroup
       value={reaction}
+      size="small"
       exclusive
       onChange={handleReaction}
       aria-label={`${type} reactions`}
       sx={{ marginTop: "1rem" }}
     >
       <ToggleButton value="like" aria-label="like">
-        <ThumbUpIcon />
-        <Typography variant="body1" sx={{ marginLeft: "1rem" }}>
-          {likeCount}
+        {reaction === "like" ? (
+          <ThumbUpIcon fontSize="small" />
+        ) : (
+          <ThumbUpOutlineIcon fontSize="small" />
+        )}
+        <Typography variant="button" sx={{ marginLeft: "0.5rem" }}>
+          {likeCount < 1000 ? likeCount : Math.round(likeCount / 1000) + "k"}
         </Typography>
       </ToggleButton>
       <ToggleButton value="dislike" aria-label="dislike">
-        <ThumbDownIcon />
-        <Typography variant="body1" sx={{ marginLeft: "1rem" }}>
-          {dislikeCount}
+        {reaction === "dislike" ? (
+          <ThumbDownIcon fontSize="small" />
+        ) : (
+          <ThumbDownOutlineIcon fontSize="small" />
+        )}
+        <Typography variant="button" sx={{ marginLeft: "0.5rem" }}>
+          {dislikeCount < 1000
+            ? dislikeCount
+            : Math.round(dislikeCount / 1000) + "k"}
         </Typography>
       </ToggleButton>
     </ToggleButtonGroup>

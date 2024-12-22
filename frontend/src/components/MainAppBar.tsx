@@ -242,6 +242,7 @@ export default function ForumAppBar() {
                 Forums
               </Typography>
             </Button>
+            <Box sx={{ flexGrow: 1 }} />
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
