@@ -129,6 +129,8 @@ func UpdateCommentReaction(db *sql.DB) http.HandlerFunc {
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
 
+		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
+
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
@@ -156,7 +158,7 @@ func UpdateCommentReaction(db *sql.DB) http.HandlerFunc {
 
 		query := "INSERT INTO comment_reactions (user_id,comment_id,state) VALUES(?,?,?) ON DUPLICATE KEY UPDATE state = VALUES(state)"
 
-		_, err = db.Exec(query, user, id, body.Reaction)
+		_, err = db.Exec(query, user_id, id, body.Reaction)
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully submitted"}`))
@@ -175,6 +177,8 @@ func DeleteCommentReaction(db *sql.DB) http.HandlerFunc {
 		log.Printf("Comment ID: %s", idStr)
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
+
+		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
 
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -196,7 +200,7 @@ func DeleteCommentReaction(db *sql.DB) http.HandlerFunc {
 
 		query := "DELETE FROM comment_reactions WHERE user_id=? AND comment_id=?"
 
-		_, err = db.Exec(query, user, id)
+		_, err = db.Exec(query, user_id, id)
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully deleted"}`))

@@ -134,6 +134,8 @@ func UpdateForumReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
+
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
@@ -156,7 +158,7 @@ func UpdateForumReaction(db *sql.DB) http.HandlerFunc {
 
 		query := "INSERT INTO forum_reactions (user_id,forum_id,state) VALUES(?,?,?) ON DUPLICATE KEY UPDATE state = VALUES(state)"
 
-		_, err = db.Exec(query, user, id, body.Reaction)
+		_, err = db.Exec(query, user_id, id, body.Reaction)
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully submitted"}`))
@@ -175,6 +177,7 @@ func DeleteForumReaction(db *sql.DB) http.HandlerFunc {
 		log.Printf("Forum ID: %s", idStr)
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
+		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
 
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -196,7 +199,7 @@ func DeleteForumReaction(db *sql.DB) http.HandlerFunc {
 
 		query := "DELETE FROM forum_reactions WHERE user_id=? AND forum_id=?"
 
-		_, err = db.Exec(query, user, id)
+		_, err = db.Exec(query, user_id, id)
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully deleted"}`))

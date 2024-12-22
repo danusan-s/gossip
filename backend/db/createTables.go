@@ -35,7 +35,7 @@ func CreateTables(db *sql.DB) error {
 
 	createForumReactionsTableSQL := `
   CREATE TABLE IF NOT EXISTS forum_reactions (
-    user_id VARCHAR(50) NOT NULL,
+    user_id INT NOT NULL,
     forum_id INT NOT NULL,
     state TINYINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -45,7 +45,7 @@ func CreateTables(db *sql.DB) error {
 
 	createCommentReactionsTableSQL := `
   CREATE TABLE IF NOT EXISTS comment_reactions (
-    user_id VARCHAR(50) NOT NULL,
+    user_id INT NOT NULL,
     comment_id BIGINT UNSIGNED NOT NULL,
     state TINYINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
