@@ -10,16 +10,14 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  InputBase,
   MenuItem,
   Menu,
-  Button,
+  Link,
 } from "@mui/material";
 
 import {
   Add as AddIcon,
   Home as HomeIcon,
-  Search as SearchIcon,
   AccountCircle,
   MoreVert as MoreIcon,
   Login as LoginIcon,
@@ -27,47 +25,8 @@ import {
   Create as CreateIcon,
 } from "@mui/icons-material";
 
-import { styled, alpha } from "@mui/material/styles";
 import ThemeSwitch from "./ThemeSwitch";
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import SearchBar from "./SearchBar";
 
 export default function ForumAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -221,84 +180,78 @@ export default function ForumAppBar() {
   );
 
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            sx={{ display: { xs: "flex", md: "none" }, marginRight: "1rem" }}
+            color="inherit"
+            onClick={() => navigate("/forum")}
+          >
+            <HomeIcon />
+          </IconButton>
+          <Link
+            color="inherit"
+            sx={{
+              display: { xs: "none", md: "block" },
+              textDecoration: "none",
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+            rel="noopener"
+            onClick={() => navigate("/forum")}
+          >
+            <Typography variant="h6" component="div">
+              Gossip
+            </Typography>
+          </Link>
+          <SearchBar />
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <ThemeSwitch
+              checked={useAppSelector((state) => state.theme.value)}
+              onChange={() => dispatch(toggleDarkTheme())}
+            ></ThemeSwitch>
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            {account !== null && (
+              <IconButton
+                size="large"
+                aria-label="create new post"
+                color="inherit"
+                onClick={() => navigate("/forum/create")}
+              >
+                <AddIcon />
+              </IconButton>
+            )}
             <IconButton
-              sx={{ display: { xs: "flex", sm: "none" }, marginRight: "1rem" }}
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
               color="inherit"
-              onClick={() => navigate("/forum")}
             >
-              <HomeIcon />
+              <AccountCircle />
             </IconButton>
-            <Button
-              variant="text"
+          </Box>
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
               color="inherit"
-              sx={{ display: { xs: "none", sm: "block" } }}
-              onClick={() => navigate("/forum")}
             >
-              <Typography variant="h6" noWrap component="div">
-                Forums
-              </Typography>
-            </Button>
-            <Box sx={{ flexGrow: 1 }} />
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <ThemeSwitch
-                checked={useAppSelector((state) => state.theme.value)}
-                onChange={() => dispatch(toggleDarkTheme())}
-              ></ThemeSwitch>
-            </Box>
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              {account !== null && (
-                <IconButton
-                  size="large"
-                  aria-label="create new post"
-                  color="inherit"
-                  onClick={() => navigate("/forum/create")}
-                >
-                  <AddIcon />
-                </IconButton>
-              )}
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderMenu}
-      </Box>
-    </>
+              <MoreIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {renderMobileMenu}
+      {renderMenu}
+    </Box>
   );
 }

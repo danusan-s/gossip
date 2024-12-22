@@ -56,6 +56,7 @@ export default function ForumPage() {
       <MainAppBar />
       <Routes>
         <Route path="/forum" element={<ForumList />} />
+        <Route path="/forum/search/:searchQuery" element={<ForumList />} />
         <Route path="/forum/create" element={<ForumCreation />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />

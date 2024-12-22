@@ -67,6 +67,58 @@ func GetAllForumsHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
+// GetSearchForumsHandler retrieves all forums from the database
+func GetSearchForumsHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Received request for GetSearchForums")
+
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			log.Println("Method not allowed")
+			return
+		}
+
+		vars := mux.Vars(r)
+		search := vars["searchTerm"]
+		log.Printf("Search Term: %s", search)
+
+		rows, err := db.Query("SELECT id, title, description, author, created_at FROM forums WHERE title LIKE ?", "%"+search+"%")
+		if err != nil {
+			http.Error(w, "Failed to query database", http.StatusInternalServerError)
+			log.Println("Error querying database:", err)
+			return
+		}
+		defer rows.Close()
+
+		var forums []ForumGet
+		for rows.Next() {
+			var forum ForumGet
+			var forumTime time.Time
+			if err := rows.Scan(&forum.ID, &forum.Title, &forum.Description, &forum.Author, &forumTime); err != nil {
+				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
+				log.Println("Error parsing database row:", err)
+				return
+			}
+			forum.Time = forumTime.Format(time.RFC3339)
+			forums = append(forums, forum)
+		}
+
+		if err := rows.Err(); err != nil {
+			http.Error(w, "Error iterating database rows", http.StatusInternalServerError)
+			log.Println("Error iterating database rows:", err)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(forums); err != nil {
+			http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
+			log.Println("Error encoding JSON:", err)
+		}
+
+		log.Println("Successfully fetched forums with search term", search)
+	}
+}
+
 // GetForumByIDHandler retrieves a specific forum by ID from the database
 func GetForumByIDHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

@@ -16,6 +16,7 @@ func SetupRoutes(db *sql.DB) *mux.Router {
 	router.Handle("/api/login/token", handlers.JWTMiddleware(handlers.LoginWithToken())).Methods("POST")
 
 	router.HandleFunc("/api/forums", handlers.GetAllForumsHandler(db)).Methods("GET")
+	router.HandleFunc("/api/forums/search/{searchTerm}", handlers.GetSearchForumsHandler(db)).Methods("GET")
 	router.Handle("/api/forums", handlers.JWTMiddleware(handlers.CreateForumHandler(db))).Methods("POST")
 	router.HandleFunc("/api/forums/{id}", handlers.GetForumByIDHandler(db)).Methods("GET")
 	router.Handle("/api/forums/{id}", handlers.JWTMiddleware(handlers.DeleteForumHandler(db))).Methods("DELETE")
