@@ -10,6 +10,7 @@ const Hoverable = styled(Paper)(({ theme }) => ({
   textTransform: "none",
   color: theme.palette.text.secondary,
   "&:hover": {
+    cursor: "pointer",
     backgroundColor: theme.palette.action.hover,
   },
 }));

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Box, Grid2 as Grid, Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ForumSingle from "./ForumSingle";
 import Hoverable from "./Hoverable";
 
@@ -19,14 +19,22 @@ export default function ForumList() {
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const { searchQuery } = useParams<{ searchQuery: string }>();
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchForums = async () => {
       try {
-        const response = await axios.get<Forum[]>(`${apiUrl}/forums`);
-        setForums(response.data);
+        if (searchQuery) {
+          const response = await axios.get<Forum[]>(
+            `${apiUrl}/forums/search/${searchQuery}`,
+          );
+          setForums(response.data);
+        } else {
+          const response = await axios.get<Forum[]>(`${apiUrl}/forums`);
+          setForums(response.data);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
@@ -35,7 +43,7 @@ export default function ForumList() {
     };
 
     fetchForums();
-  }, []);
+  }, [searchQuery]);
 
   if (loading) return <div>Loading forums...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -58,7 +66,7 @@ export default function ForumList() {
   return (
     <Box sx={{ margin: "1rem" }}>
       <Grid container>
-        <Grid size={{ xs: 12, sm: 6 }} offset={{ xs: 0, sm: 3 }}>
+        <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
           <Stack spacing={2} alignItems="center">
             {list}
           </Stack>

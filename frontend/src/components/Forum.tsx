@@ -70,7 +70,7 @@ export default function Forum() {
   return (
     <Box sx={{ margin: "2rem" }}>
       <Grid container>
-        <Grid size={{ xs: 12, sm: 8 }} offset={{ xs: 0, sm: 2 }}>
+        <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
           <Item>
             <ForumSingle forumData={forum} />
           </Item>

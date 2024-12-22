@@ -4,7 +4,7 @@ import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../hooks";
-import MoreIcon from "@mui/icons-material/MoreVert";
+import MoreIcon from "@mui/icons-material/MoreHoriz";
 import LocalTimeChip from "./LocalTimeChip";
 import ReactionBox from "./Reactions";
 
@@ -106,7 +106,13 @@ export default function ForumSingle({
           justifyContent: "space-between",
         }}
       >
-        <Chip label={forumData.author} />
+        <Chip
+          label={forumData.author}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/user/${forumData.author}`);
+          }}
+        />
         <LocalTimeChip time={forumData.time} />
       </Box>
       <Typography
@@ -136,21 +142,24 @@ export default function ForumSingle({
       >
         {forumData.description}
       </Typography>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ display: "flex", marginTop: "1rem" }}>
         <ReactionBox id={forumData.id} type={"forums"} />
-        {focused && (
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="post options"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleMenuOpen}
-            color="inherit"
-          >
-            <MoreIcon />
-          </IconButton>
-        )}
+        <Box sx={{ flexGrow: 1 }} />
+        <Box>
+          {focused && (
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="post options"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          )}
+        </Box>
       </Box>
       {renderMenu}
     </>

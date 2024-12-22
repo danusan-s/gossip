@@ -135,13 +135,18 @@ export default function ReactionBox({
   return (
     <ToggleButtonGroup
       value={reaction}
-      size="small"
       exclusive
       onChange={handleReaction}
       aria-label={`${type} reactions`}
-      sx={{ marginTop: "1rem" }}
     >
-      <ToggleButton value="like" aria-label="like">
+      <ToggleButton
+        value="like"
+        aria-label="like"
+        sx={{
+          borderRadius: "50px 0 0 50px",
+          paddingLeft: "1rem",
+        }}
+      >
         {reaction === "like" ? (
           <ThumbUpIcon fontSize="small" />
         ) : (
@@ -151,17 +156,21 @@ export default function ReactionBox({
           {likeCount < 1000 ? likeCount : Math.round(likeCount / 1000) + "k"}
         </Typography>
       </ToggleButton>
-      <ToggleButton value="dislike" aria-label="dislike">
+      <ToggleButton
+        value="dislike"
+        aria-label="dislike"
+        sx={{ borderRadius: "0 50px 50px 0", paddingRight: "1rem" }}
+      >
+        <Typography variant="button" sx={{ marginRight: "0.5rem" }}>
+          {dislikeCount < 1000
+            ? dislikeCount
+            : Math.round(dislikeCount / 1000) + "k"}
+        </Typography>
         {reaction === "dislike" ? (
           <ThumbDownIcon fontSize="small" />
         ) : (
           <ThumbDownOutlineIcon fontSize="small" />
         )}
-        <Typography variant="button" sx={{ marginLeft: "0.5rem" }}>
-          {dislikeCount < 1000
-            ? dislikeCount
-            : Math.round(dislikeCount / 1000) + "k"}
-        </Typography>
       </ToggleButton>
     </ToggleButtonGroup>
   );

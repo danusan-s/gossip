@@ -47,23 +47,25 @@ export default function CommentSingle({
         <Chip label={commentData.author} />
         <Box>
           <LocalTimeChip time={commentData.time} />
-          {account === commentData.author && (
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="delete comment"
-              onClick={() => handleDelete(commentData.id)}
-              color="inherit"
-            >
-              <DeleteIcon />
-            </IconButton>
-          )}
         </Box>
       </Box>
-      <Typography variant="body1" paddingLeft="1rem">
+      <Typography variant="body1" paddingLeft="1rem" marginTop="0.5rem">
         {commentData.content}
       </Typography>
-      <ReactionBox id={commentData.id} type={"comments"} />
+      <Box display="flex" justifyContent="space-between" marginTop="0.5rem">
+        <ReactionBox id={commentData.id} type={"comments"} />
+        {account === commentData.author && (
+          <IconButton
+            size="large"
+            edge="end"
+            aria-label="delete comment"
+            onClick={() => handleDelete(commentData.id)}
+            color="inherit"
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
+      </Box>
     </Item>
   );
 }
