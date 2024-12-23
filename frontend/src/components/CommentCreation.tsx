@@ -44,7 +44,6 @@ export default function Comments({
           },
         },
       );
-      console.log("Response:", response.data);
       handleNewComment();
       setFormData("");
     } catch (err) {

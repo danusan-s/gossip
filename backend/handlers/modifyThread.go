@@ -41,6 +41,12 @@ func CreateThreadHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		if len(body.Title) > 100 {
+			http.Error(w, "Title is too long", http.StatusBadRequest)
+			log.Println("Title is too long")
+			return
+		}
+
 		var categoryID int
 		err := db.QueryRow("SELECT id FROM CATEGORIES WHERE category=?", body.Category).Scan(&categoryID)
 		if err != nil {

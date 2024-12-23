@@ -90,7 +90,6 @@ export default function ThreadCreation() {
           },
         },
       );
-      console.log("Response:", response.data);
       setFormData({ title: "", description: "", category: "" });
       navigate("/thread");
     } catch (err) {
