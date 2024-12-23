@@ -13,6 +13,7 @@ interface Thread {
   title: string;
   description: string;
   author: string;
+  category: string;
   time: string;
 }
 
@@ -106,13 +107,16 @@ export default function ThreadSingle({
           justifyContent: "space-between",
         }}
       >
-        <Chip
-          label={threadData.author}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/user/${threadData.author}`);
-          }}
-        />
+        <Box>
+          <Chip
+            label={threadData.author}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/user/${threadData.author}`);
+            }}
+          />
+          <Chip label={threadData.category} />
+        </Box>
         <LocalTimeChip time={threadData.time} />
       </Box>
       <Typography

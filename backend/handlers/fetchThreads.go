@@ -16,7 +16,18 @@ type ThreadGet struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Author      string `json:"author"`
+	Category    string `json:"category"`
 	Time        string `json:"time"`
+}
+
+func findCategoryByID(db *sql.DB, id int) (string, error) {
+	var category string
+	err := db.QueryRow("SELECT category FROM CATEGORIES WHERE id = ?", id).Scan(&category)
+	if err != nil {
+		log.Println("Error querying database:", err)
+		return "", err
+	}
+	return category, nil
 }
 
 // GetAllThreadsHandler retrieves all Threads from the database
@@ -30,7 +41,7 @@ func GetAllThreadsHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		rows, err := db.Query("SELECT id, title, description, author, created_at FROM THREADS")
+		rows, err := db.Query("SELECT id, title, description, author, category_id, created_at FROM THREADS")
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
 			log.Println("Error querying database:", err)
@@ -42,9 +53,15 @@ func GetAllThreadsHandler(db *sql.DB) http.HandlerFunc {
 		for rows.Next() {
 			var thread ThreadGet
 			var threadTime time.Time
-			if err := rows.Scan(&thread.ID, &thread.Title, &thread.Description, &thread.Author, &threadTime); err != nil {
+			var categoryID int
+			if err := rows.Scan(&thread.ID, &thread.Title, &thread.Description, &thread.Author, &categoryID, &threadTime); err != nil {
 				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
 				log.Println("Error parsing database row:", err)
+				return
+			}
+			thread.Category, err = findCategoryByID(db, categoryID)
+			if err != nil {
+				http.Error(w, "Failed to find category", http.StatusInternalServerError)
 				return
 			}
 			thread.Time = threadTime.Format(time.RFC3339)
@@ -82,7 +99,7 @@ func GetSearchThreadsHandler(db *sql.DB) http.HandlerFunc {
 		search := vars["searchTerm"]
 		log.Printf("Search Term: %s", search)
 
-		rows, err := db.Query("SELECT id, title, description, author, created_at FROM THREADS WHERE title LIKE ?", "%"+search+"%")
+		rows, err := db.Query("SELECT id, title, description, author, category_id, created_at FROM THREADS WHERE title LIKE ?", "%"+search+"%")
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
 			log.Println("Error querying database:", err)
@@ -94,9 +111,15 @@ func GetSearchThreadsHandler(db *sql.DB) http.HandlerFunc {
 		for rows.Next() {
 			var thread ThreadGet
 			var threadTime time.Time
-			if err := rows.Scan(&thread.ID, &thread.Title, &thread.Description, &thread.Author, &threadTime); err != nil {
+			var categoryID int
+			if err := rows.Scan(&thread.ID, &thread.Title, &thread.Description, &thread.Author, &categoryID, &threadTime); err != nil {
 				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
 				log.Println("Error parsing database row:", err)
+				return
+			}
+			thread.Category, err = findCategoryByID(db, categoryID)
+			if err != nil {
+				http.Error(w, "Failed to find category", http.StatusInternalServerError)
 				return
 			}
 			thread.Time = threadTime.Format(time.RFC3339)
@@ -141,15 +164,21 @@ func GetThreadByIDHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT title, description, author, created_at FROM THREADS WHERE id = ?"
+		query := "SELECT title, description, author, category_id, created_at FROM THREADS WHERE id = ?"
 		row := db.QueryRow(query, id)
 
 		var thread ThreadGet
 		thread.ID = id
 		var threadTime time.Time
-		if err := row.Scan(&thread.Title, &thread.Description, &thread.Author, &threadTime); err != nil {
+		var categoryID int
+		if err := row.Scan(&thread.Title, &thread.Description, &thread.Author, &categoryID, &threadTime); err != nil {
 			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
 			log.Println("Error parsing database row:", err)
+			return
+		}
+		thread.Category, err = findCategoryByID(db, categoryID)
+		if err != nil {
+			http.Error(w, "Failed to find category", http.StatusInternalServerError)
 			return
 		}
 		thread.Time = threadTime.Format(time.RFC3339)
@@ -179,15 +208,22 @@ func GetThreadsByUserHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT id, title, description, created_at FROM THREADS WHERE author = ?"
+		query := "SELECT id, title, description, category_id, created_at FROM THREADS WHERE author = ?"
 		row := db.QueryRow(query, user)
 
 		var thread ThreadGet
 		thread.Author = user
 		var threadTime time.Time
-		if err := row.Scan(&thread.ID, &thread.Title, &thread.Description, &threadTime); err != nil {
+		var categoryID int
+		if err := row.Scan(&thread.ID, &thread.Title, &thread.Description, &categoryID, &threadTime); err != nil {
 			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
 			log.Println("Error parsing database row:", err)
+			return
+		}
+		var err error
+		thread.Category, err = findCategoryByID(db, categoryID)
+		if err != nil {
+			http.Error(w, "Failed to find category", http.StatusInternalServerError)
 			return
 		}
 		thread.Time = threadTime.Format(time.RFC3339)

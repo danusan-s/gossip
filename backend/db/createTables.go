@@ -6,13 +6,25 @@ import (
 )
 
 func CreateTables(db *sql.DB) error {
+	createCategoriesTableSQL := `
+  CREATE TABLE IF NOT EXISTS CATEGORIES (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(255) NOT NULL UNIQUE
+  );`
+
+	insertCategoriesSQL := `
+  INSERT IGNORE INTO CATEGORIES (category) VALUES ('General'), ('Technology'), ('Science'),
+  ('Politics'), ('Sports'), ('Music'), ('Movies'), ('Books'), ('Food'), ('Travel');`
+
 	createThreadsTableSQL := `
 	CREATE TABLE IF NOT EXISTS THREADS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     author VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    category_id INT DEFAULT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES CATEGORIES(id) ON DELETE SET NULL
 );`
 
 	createUsersTableSQL := `
@@ -54,22 +66,36 @@ func CreateTables(db *sql.DB) error {
     FOREIGN KEY (comment_id) REFERENCES COMMENTS(id) ON DELETE CASCADE
 );`
 
-	_, err := db.Exec(createThreadsTableSQL)
+	_, err := db.Exec(createCategoriesTableSQL)
+	if err != nil {
+		return fmt.Errorf("failed to create categories table: %v", err)
+	}
+
+	_, err = db.Exec(insertCategoriesSQL)
+	if err != nil {
+		return fmt.Errorf("failed to insert categories: %v", err)
+	}
+
+	_, err = db.Exec(createThreadsTableSQL)
 	if err != nil {
 		return fmt.Errorf("failed to create Threads table: %v", err)
 	}
+
 	_, err = db.Exec(createUsersTableSQL)
 	if err != nil {
 		return fmt.Errorf("failed to create users table: %v", err)
 	}
+
 	_, err = db.Exec(createCommentsTableSQL)
 	if err != nil {
 		return fmt.Errorf("failed to create comments table: %v", err)
 	}
+
 	_, err = db.Exec(createThreadReactionsTableSQL)
 	if err != nil {
 		return fmt.Errorf("failed to create Thread_reactions table: %v", err)
 	}
+
 	_, err = db.Exec(createCommentReactionsTableSQL)
 	if err != nil {
 		return fmt.Errorf("failed to create comment_reactions table: %v", err)

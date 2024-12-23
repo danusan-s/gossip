@@ -13,6 +13,7 @@ interface Thread {
   title: string;
   description: string;
   author: string;
+  category: string;
   time: string;
 }
 
@@ -20,7 +21,7 @@ export default function Thread() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { threadID } = useParams<{ ThreadID: string }>();
+  const { threadID } = useParams<{ threadID: string }>();
   const id = parseInt(threadID || "", 10);
   if (isNaN(id)) {
     return <div>Invalid Thread ID</div>;
@@ -31,6 +32,7 @@ export default function Thread() {
     title: "",
     description: "",
     author: "",
+    category: "",
     time: "",
   });
 

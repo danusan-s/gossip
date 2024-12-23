@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Box, Grid2 as Grid, Stack } from "@mui/material";
+import { Box, Grid2 as Grid, Stack, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
@@ -10,6 +10,7 @@ interface Thread {
   title: string;
   description: string;
   author: string;
+  category: string;
   time: string;
 }
 
@@ -68,6 +69,11 @@ export default function ThreadList() {
       <Grid container>
         <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
           <Stack spacing={2} alignItems="center">
+            {searchQuery && (
+              <Typography variant="h5" gutterBottom>
+                Search Results for "{searchQuery}":
+              </Typography>
+            )}
             {list}
           </Stack>
         </Grid>

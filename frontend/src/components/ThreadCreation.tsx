@@ -9,16 +9,19 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../hooks";
+import CategorySelect from "./CategorySelect";
 
 interface FormData {
   title: string;
   description: string;
+  category: string;
 }
 
 export default function ThreadCreation() {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
+    category: "",
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +40,15 @@ export default function ThreadCreation() {
     }));
   };
 
+  const handleCategory = (newAlignment: string | null) => {
+    if (newAlignment !== null) {
+      setFormData((prev) => ({
+        ...prev,
+        category: newAlignment,
+      }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -44,8 +56,8 @@ export default function ThreadCreation() {
       setError("Must be logged in to create post.");
       return;
     }
-    if (!formData.title || !formData.description) {
-      setError("Both fields are required.");
+    if (!formData.title || !formData.description || !formData.category) {
+      setError("All fields are required.");
       return;
     }
 
@@ -68,7 +80,7 @@ export default function ThreadCreation() {
         },
       );
       console.log("Response:", response.data);
-      setFormData({ title: "", description: "" });
+      setFormData({ title: "", description: "", category: "" });
       navigate("/thread");
     } catch (err) {
       console.error("Error sending data:", err);
@@ -117,6 +129,11 @@ export default function ThreadCreation() {
               multiline
               rows={4}
               fullWidth
+            />
+
+            <CategorySelect
+              category={formData.category}
+              setCategory={handleCategory}
             />
 
             {error && (

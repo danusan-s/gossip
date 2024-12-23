@@ -38,5 +38,7 @@ func SetupRoutes(db *sql.DB) *mux.Router {
 	router.HandleFunc("/api/user/{user}/comments", handlers.GetCommentsByUserHandler(db)).Methods("GET")
 	router.HandleFunc("/api/user/{user}/threads", handlers.GetThreadsByUserHandler(db)).Methods("GET")
 
+	router.HandleFunc("/api/categories", handlers.GetAllCategoriesHandler(db)).Methods("GET")
+
 	return router
 }

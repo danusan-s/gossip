@@ -14,6 +14,7 @@ type ThreadCreate struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Author      string `json:"author"`
+	Category    string `json:"category"`
 }
 
 // CreateThreadHandler handles the creation of a new Thread
@@ -40,8 +41,16 @@ func CreateThreadHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "INSERT INTO THREADS (title, description, author) VALUES (?, ?, ?)"
-		_, err := db.Exec(query, body.Title, body.Description, body.Author)
+		var categoryID int
+		err := db.QueryRow("SELECT id FROM CATEGORIES WHERE category=?", body.Category).Scan(&categoryID)
+		if err != nil {
+			http.Error(w, "Failed to get category ID", http.StatusInternalServerError)
+			log.Println("Error getting category ID from database:", err)
+			return
+		}
+
+		query := "INSERT INTO THREADS (title, description, author, category_id) VALUES (?, ?, ?, ?)"
+		_, err = db.Exec(query, body.Title, body.Description, body.Author, categoryID)
 		if err != nil {
 			http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 			log.Println("Error inserting data into database:", err)
