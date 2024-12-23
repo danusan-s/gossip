@@ -26,7 +26,6 @@ export default function CommentSingle({
 
   const handleDelete = async (id: number) => {
     try {
-      // Assuming the JWT is stored in localStorage
       const token = localStorage.getItem("token");
 
       await axios.delete(`${apiUrl}/comments/${id}`, {

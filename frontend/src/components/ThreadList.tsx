@@ -4,6 +4,7 @@ import { Box, Grid2 as Grid, Stack, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
+import CategorySelect from "./CategorySelect";
 
 interface Thread {
   id: number;
@@ -17,6 +18,7 @@ interface Thread {
 export default function ThreadList() {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [category, setCategory] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -51,6 +53,7 @@ export default function ThreadList() {
 
   const list = threads ? (
     threads.map((value) => {
+      if (category && value.category !== category) return null;
       return (
         <Hoverable
           onClick={() => navigate(`/thread/${value.id}`)}
@@ -68,6 +71,9 @@ export default function ThreadList() {
     <Box sx={{ margin: "1rem" }}>
       <Grid container>
         <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
+          <Box display="flex" justifyContent="center" marginBottom="1rem">
+            <CategorySelect category={category} setCategory={setCategory} />
+          </Box>
           <Stack spacing={2} alignItems="center">
             {searchQuery && (
               <Typography variant="h5" gutterBottom>

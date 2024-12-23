@@ -30,7 +30,6 @@ export default function Comments({
     }
 
     try {
-      // Assuming the JWT is stored in localStorage
       const token = localStorage.getItem("token");
 
       const response = await axios.post(

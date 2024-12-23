@@ -34,6 +34,9 @@ export default function ThreadCreation() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
+    if (name === "title" && value.length > 100) {
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -56,15 +59,23 @@ export default function ThreadCreation() {
       setError("Must be logged in to create post.");
       return;
     }
-    if (!formData.title || !formData.description || !formData.category) {
-      setError("All fields are required.");
+
+    if (!formData.title) {
+      setError("Title is required.");
+      return;
+    }
+    if (!formData.description) {
+      setError("Description is required.");
+      return;
+    }
+    if (!formData.category) {
+      setError("Category is required.");
       return;
     }
 
     setError(null);
 
     try {
-      // Assuming the JWT is stored in localStorage
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
@@ -91,7 +102,7 @@ export default function ThreadCreation() {
   return (
     <Box margin="2rem">
       <Grid container>
-        <Grid size={{ xs: 12, sm: 8 }} offset={{ xs: 0, sm: 2 }}>
+        <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -112,7 +123,7 @@ export default function ThreadCreation() {
             </Typography>
 
             <TextField
-              label="Title"
+              label="Title (max 100 characters)"
               name="title"
               value={formData.title}
               onChange={handleChange}
@@ -131,6 +142,7 @@ export default function ThreadCreation() {
               fullWidth
             />
 
+            <Typography variant="body1">Choose Thread category:</Typography>
             <CategorySelect
               category={formData.category}
               setCategory={handleCategory}

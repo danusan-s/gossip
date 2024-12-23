@@ -1,12 +1,36 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButtonGroup, {
+  toggleButtonGroupClasses,
+} from "@mui/material/ToggleButtonGroup";
+import { styled } from "@mui/system";
 
 interface Category {
   id: number;
   category: string;
 }
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  display: "flex",
+  gap: theme.spacing(1),
+  flexWrap: "nowrap",
+  overflowX: "auto",
+  paddingBottom: theme.spacing(2),
+  [`& .${toggleButtonGroupClasses.grouped}`]: {
+    border: 0,
+    borderRadius: "50px 50px 50px 50px",
+    padding: theme.spacing(1, 2),
+    [`&.${toggleButtonGroupClasses.disabled}`]: {
+      border: 0,
+    },
+  },
+  [`& .${toggleButtonGroupClasses.middleButton},& .${toggleButtonGroupClasses.lastButton}`]:
+    {
+      marginLeft: -1,
+      borderLeft: "1px solid transparent",
+    },
+}));
 
 export default function CategorySelect({
   category,
@@ -61,13 +85,13 @@ export default function CategorySelect({
     : null;
 
   return (
-    <ToggleButtonGroup
+    <StyledToggleButtonGroup
       value={category === "" ? null : category}
       exclusive
       onChange={handleCategory}
       aria-label="text alignment"
     >
       {list}
-    </ToggleButtonGroup>
+    </StyledToggleButtonGroup>
   );
 }

@@ -47,7 +47,6 @@ export default function ThreadSingle({
     }
 
     try {
-      // Assuming the JWT is stored in localStorage
       const token = localStorage.getItem("token");
 
       await axios.delete(`${apiUrl}/threads/${threadData.id}`, {
