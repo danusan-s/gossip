@@ -44,7 +44,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		log.Printf("Password hashed successfully for Username=%s\n", req.Username)
 
 		// Insert user into the database
-		_, err = db.Exec("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)",
+		_, err = db.Exec("INSERT INTO USERS (username, email, password_hash) VALUES (?, ?, ?)",
 			req.Username, req.Email, hash)
 		if err != nil {
 			log.Printf("Failed to insert user into database for Username=%s: %v\n", req.Username, err)

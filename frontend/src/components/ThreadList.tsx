@@ -2,10 +2,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Box, Grid2 as Grid, Stack } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import ForumSingle from "./ForumSingle";
+import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
 
-interface Forum {
+interface Thread {
   id: number;
   title: string;
   description: string;
@@ -13,8 +13,8 @@ interface Forum {
   time: string;
 }
 
-export default function ForumList() {
-  const [forums, setForums] = useState<Forum[]>([]);
+export default function ThreadList() {
+  const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,16 +24,16 @@ export default function ForumList() {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const fetchForums = async () => {
+    const fetchThreads = async () => {
       try {
         if (searchQuery) {
-          const response = await axios.get<Forum[]>(
-            `${apiUrl}/forums/search/${searchQuery}`,
+          const response = await axios.get<Thread[]>(
+            `${apiUrl}/threads/search/${searchQuery}`,
           );
-          setForums(response.data);
+          setThreads(response.data);
         } else {
-          const response = await axios.get<Forum[]>(`${apiUrl}/forums`);
-          setForums(response.data);
+          const response = await axios.get<Thread[]>(`${apiUrl}/threads`);
+          setThreads(response.data);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -42,25 +42,25 @@ export default function ForumList() {
       }
     };
 
-    fetchForums();
+    fetchThreads();
   }, [searchQuery]);
 
-  if (loading) return <div>Loading forums...</div>;
+  if (loading) return <div>Loading Threads...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const list = forums ? (
-    forums.map((value) => {
+  const list = threads ? (
+    threads.map((value) => {
       return (
         <Hoverable
-          onClick={() => navigate(`/forum/${value.id}`)}
+          onClick={() => navigate(`/thread/${value.id}`)}
           key={value.id}
         >
-          <ForumSingle forumData={value} focused={false} />
+          <ThreadSingle threadData={value} focused={false} />
         </Hoverable>
       );
     })
   ) : (
-    <div>No forums found</div>
+    <div>No Threads found</div>
   );
 
   return (

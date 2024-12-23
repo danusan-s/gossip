@@ -10,16 +10,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ForumCreate struct {
+type ThreadCreate struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Author      string `json:"author"`
 }
 
-// CreateForumHandler handles the creation of a new forum
-func CreateForumHandler(db *sql.DB) http.HandlerFunc {
+// CreateThreadHandler handles the creation of a new Thread
+func CreateThreadHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for CreateForum")
+		log.Println("Received request for CreateThread")
 
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -27,7 +27,7 @@ func CreateForumHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		var body ForumCreate
+		var body ThreadCreate
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, "Invalid request body", http.StatusBadRequest)
 			log.Println("Error decoding request body:", err)
@@ -40,7 +40,7 @@ func CreateForumHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "INSERT INTO forums (title, description, author) VALUES (?, ?, ?)"
+		query := "INSERT INTO THREADS (title, description, author) VALUES (?, ?, ?)"
 		_, err := db.Exec(query, body.Title, body.Description, body.Author)
 		if err != nil {
 			http.Error(w, "Failed to insert data", http.StatusInternalServerError)
@@ -50,21 +50,21 @@ func CreateForumHandler(db *sql.DB) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully submitted"}`))
-		log.Println("Forum created successfully")
+		log.Println("Thread created successfully")
 	}
 }
 
-// DeleteForumHandler handles the deletion of a forum
-func DeleteForumHandler(db *sql.DB) http.HandlerFunc {
+// DeleteThreadHandler handles the deletion of a Thread
+func DeleteThreadHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
-		forumID, err := strconv.Atoi(idStr)
+		threadID, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 
@@ -75,7 +75,7 @@ func DeleteForumHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		log.Println("Received request for DeleteForum")
+		log.Println("Received request for DeleteThread")
 
 		if r.Method != http.MethodDelete {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -83,8 +83,8 @@ func DeleteForumHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "DELETE FROM forums WHERE id=? AND author=?"
-		_, err = db.Exec(query, forumID, user)
+		query := "DELETE FROM THREADS WHERE id=? AND author=?"
+		_, err = db.Exec(query, threadID, user)
 		if err != nil {
 			http.Error(w, "Failed to delete data", http.StatusInternalServerError)
 			log.Println("Error deleting data from database:", err)
@@ -93,6 +93,6 @@ func DeleteForumHandler(db *sql.DB) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully deleted"}`))
-		log.Println("Forum deleted successfully")
+		log.Println("Thread deleted successfully")
 	}
 }

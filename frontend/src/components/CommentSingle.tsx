@@ -8,7 +8,7 @@ import ReactionBox from "./Reactions";
 
 interface Comment {
   id: number;
-  forum_id: number;
+  thread_id: number;
   content: string;
   author: string;
   time: string;

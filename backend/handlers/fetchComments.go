@@ -12,24 +12,24 @@ import (
 )
 
 type CommentGet struct {
-	ID      int    `json:"id"`
-	ForumID int    `json:"forum_id"`
-	Content string `json:"content"`
-	Author  string `json:"author"`
-	Time    string `json:"time"`
+	ID       int    `json:"id"`
+	ThreadID int    `json:"thread_id"`
+	Content  string `json:"content"`
+	Author   string `json:"author"`
+	Time     string `json:"time"`
 }
 
-// GetCommentsByUserHandler retrieves all comments of a forum from the database
-func GetCommentsByForumHandler(db *sql.DB) http.HandlerFunc {
+// GetCommentsByUserHandler retrieves all comments of a Thread from the database
+func GetCommentsByThreadHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
-		forumID, err := strconv.Atoi(idStr)
+		threadID, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 		log.Println("Received request for GetAllComments")
@@ -40,8 +40,8 @@ func GetCommentsByForumHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT id, content, author, created_at FROM comments WHERE forum_id=?"
-		rows, err := db.Query(query, forumID)
+		query := "SELECT id, content, author, created_at FROM COMMENTS WHERE thread_id=?"
+		rows, err := db.Query(query, threadID)
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
 			log.Println("Error querying database:", err)
@@ -52,7 +52,7 @@ func GetCommentsByForumHandler(db *sql.DB) http.HandlerFunc {
 		var comments []CommentGet
 		for rows.Next() {
 			var comment CommentGet
-			comment.ForumID = forumID
+			comment.ThreadID = threadID
 			var commentTime time.Time
 			if err := rows.Scan(&comment.ID, &comment.Content, &comment.Author, &commentTime); err != nil {
 				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
@@ -94,7 +94,7 @@ func GetCommentsByUserHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT id,forum_id, content, created_at FROM comments WHERE author=?"
+		query := "SELECT id,thread_id, content, created_at FROM COMMENTS WHERE author=?"
 		rows, err := db.Query(query, user)
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
@@ -108,7 +108,7 @@ func GetCommentsByUserHandler(db *sql.DB) http.HandlerFunc {
 			var comment CommentGet
 			comment.Author = user
 			var commentTime time.Time
-			if err := rows.Scan(&comment.ID, &comment.ForumID, &comment.Content, &commentTime); err != nil {
+			if err := rows.Scan(&comment.ID, &comment.ThreadID, &comment.Content, &commentTime); err != nil {
 				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
 				log.Println("Error parsing database row:", err)
 				return

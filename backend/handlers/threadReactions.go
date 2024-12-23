@@ -10,28 +10,28 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ForumReactionGet struct {
+type ThreadReactionGet struct {
 	Likes    string `json:"like"`
 	Dislikes string `json:"dislike"`
 }
 
-type ForumReactionCreate struct {
+type ThreadReactionCreate struct {
 	Reaction string `json:"reaction"`
 }
 
-// GetForumReaction returns the reaction of a forum
-func GetForumReaction(db *sql.DB) http.HandlerFunc {
+// GetThreadReaction returns the reaction of a Thread
+func GetThreadReaction(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for GetForumReaction")
+		log.Println("Received request for GetThreadReaction")
 
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 
@@ -41,11 +41,11 @@ func GetForumReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT COUNT(*) FROM forum_reactions WHERE forum_id=? AND state=?"
+		query := "SELECT COUNT(*) FROM THREAD_REACTIONS WHERE thread_id=? AND state=?"
 		likeRow := db.QueryRow(query, id, 1)
 		dislikeRow := db.QueryRow(query, id, 0)
 
-		var reaction ForumReactionGet
+		var reaction ThreadReactionGet
 		if err := likeRow.Scan(&reaction.Likes); err != nil {
 			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
 			log.Println("Error parsing database row:", err)
@@ -63,22 +63,22 @@ func GetForumReaction(db *sql.DB) http.HandlerFunc {
 			log.Println("Error encoding JSON:", err)
 		}
 
-		log.Printf("Successfully fetched reactions for forum with ID %d", id)
+		log.Printf("Successfully fetched reactions for thread with ID %d", id)
 	}
 }
 
-func GetForumUserReaction(db *sql.DB) http.HandlerFunc {
+func GetThreadUserReaction(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for GetForumUserReaction")
+		log.Println("Received request for GetThreadUserReaction")
 
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 
@@ -94,10 +94,10 @@ func GetForumUserReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT state FROM forum_reactions WHERE forum_id=? AND user_id=?"
+		query := "SELECT state FROM THREAD_REACTIONS WHERE thread_id=? AND user_id=?"
 		row := db.QueryRow(query, id, user)
 
-		var reaction ForumReactionCreate
+		var reaction ThreadReactionCreate
 		if err := row.Scan(&reaction.Reaction); err != nil {
 			if err == sql.ErrNoRows {
 				reaction.Reaction = "none"
@@ -114,18 +114,18 @@ func GetForumUserReaction(db *sql.DB) http.HandlerFunc {
 			log.Println("Error encoding JSON:", err)
 		}
 
-		log.Printf("Successfully fetched reaction for forum with ID %d by user %s", id, user)
+		log.Printf("Successfully fetched reaction for thread with ID %d by user %s", id, user)
 	}
 }
 
-// UpdateForumReaction updates the reaction of a forum
-func UpdateForumReaction(db *sql.DB) http.HandlerFunc {
+// UpdateThreadReaction updates the reaction of a Thread
+func UpdateThreadReaction(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for UpdateForumReaction")
+		log.Println("Received request for UpdateThreadReaction")
 
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
 
@@ -134,12 +134,12 @@ func UpdateForumReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
+		user_id, err := db.Exec("SELECT id FROM USERS WHERE username = ?", user)
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 
@@ -149,32 +149,32 @@ func UpdateForumReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		var body ForumReactionCreate
+		var body ThreadReactionCreate
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, "Invalid request body", http.StatusBadRequest)
 			log.Println("Error decoding request body:", err)
 			return
 		}
 
-		query := "INSERT INTO forum_reactions (user_id,forum_id,state) VALUES(?,?,?) ON DUPLICATE KEY UPDATE state = VALUES(state)"
+		query := "INSERT INTO THREAD_REACTIONS (user_id,thread_id,state) VALUES(?,?,?) ON DUPLICATE KEY UPDATE state = VALUES(state)"
 
 		_, err = db.Exec(query, user_id, id, body.Reaction)
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully submitted"}`))
 
-		log.Printf("Successfully updated reaction for forum with ID %d by user %s", id, user)
+		log.Printf("Successfully updated reaction for thread with ID %d by user %s", id, user)
 	}
 }
 
-// DeleteForumReaction deletes the reaction of a forum from a user
-func DeleteForumReaction(db *sql.DB) http.HandlerFunc {
+// DeleteThreadReaction deletes the reaction of a Thread from a user
+func DeleteThreadReaction(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for DeleteForumReaction")
+		log.Println("Received request for DeleteThreadReaction")
 
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
 		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
@@ -186,8 +186,8 @@ func DeleteForumReaction(db *sql.DB) http.HandlerFunc {
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 
@@ -197,13 +197,13 @@ func DeleteForumReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "DELETE FROM forum_reactions WHERE user_id=? AND forum_id=?"
+		query := "DELETE FROM THREAD_REACTIONS WHERE user_id=? AND thread_id=?"
 
 		_, err = db.Exec(query, user_id, id)
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully deleted"}`))
 
-		log.Printf("Successfully removed reaction for forum with ID %d by user %s", id, user)
+		log.Printf("Successfully removed reaction for thread with ID %d by user %s", id, user)
 	}
 }

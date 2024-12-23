@@ -33,7 +33,9 @@ func main() {
 	}
 	defer database.Close()
 
-	db.CreateTables(database)
+	if err := db.CreateTables(database); err != nil {
+		log.Fatalf("Failed to create tables: %v", err)
+	}
 
 	// Set up routes
 	mux := routes.SetupRoutes(database)

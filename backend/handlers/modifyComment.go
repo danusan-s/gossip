@@ -20,12 +20,12 @@ func CreateCommentHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
-		forumID, err := strconv.Atoi(idStr)
+		threadID, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 
@@ -50,8 +50,8 @@ func CreateCommentHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "INSERT INTO comments (content, author, forum_id) VALUES (?, ?, ?)"
-		_, err = db.Exec(query, body.Content, body.Author, forumID)
+		query := "INSERT INTO COMMENTS (content, author, thread_id) VALUES (?, ?, ?)"
+		_, err = db.Exec(query, body.Content, body.Author, threadID)
 		if err != nil {
 			http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 			log.Println("Error inserting data into database:", err)
@@ -60,7 +60,7 @@ func CreateCommentHandler(db *sql.DB) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully submitted"}`))
-		log.Println("Forum created successfully")
+		log.Println("Thread created successfully")
 	}
 }
 
@@ -93,7 +93,7 @@ func DeleteCommentHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "DELETE FROM comments WHERE id=? AND author=?"
+		query := "DELETE FROM COMMENTS WHERE id=? AND author=?"
 		_, err = db.Exec(query, commentId, user)
 		if err != nil {
 			http.Error(w, "Failed to delete data", http.StatusInternalServerError)
@@ -103,6 +103,6 @@ func DeleteCommentHandler(db *sql.DB) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"Data successfully deleted"}`))
-		log.Println("Forum deleted successfully")
+		log.Println("Thread deleted successfully")
 	}
 }

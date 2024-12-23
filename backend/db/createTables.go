@@ -6,8 +6,8 @@ import (
 )
 
 func CreateTables(db *sql.DB) error {
-	createForumsTableSQL := `
-	CREATE TABLE IF NOT EXISTS forums (
+	createThreadsTableSQL := `
+	CREATE TABLE IF NOT EXISTS THREADS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -16,7 +16,7 @@ func CreateTables(db *sql.DB) error {
 );`
 
 	createUsersTableSQL := `
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS USERS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -25,37 +25,38 @@ func CreateTables(db *sql.DB) error {
 );`
 
 	createCommentsTableSQL := `
-  CREATE TABLE IF NOT EXISTS comments (
+  CREATE TABLE IF NOT EXISTS COMMENTS (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    forum_id INT NOT NULL,
+    thread_id INT NOT NULL,
     content TEXT NOT NULL,
     author VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES THREADS(id) ON DELETE CASCADE
 );`
 
-	createForumReactionsTableSQL := `
-  CREATE TABLE IF NOT EXISTS forum_reactions (
+	createThreadReactionsTableSQL := `
+  CREATE TABLE IF NOT EXISTS THREAD_REACTIONS (
     user_id INT NOT NULL,
-    forum_id INT NOT NULL,
+    thread_id INT NOT NULL,
     state TINYINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, forum_id),
-    FOREIGN KEY (forum_id) REFERENCES forums(id) ON DELETE CASCADE
+    PRIMARY KEY (user_id, thread_id),
+    FOREIGN KEY (thread_id) REFERENCES THREADS(id) ON DELETE CASCADE
 );`
 
 	createCommentReactionsTableSQL := `
-  CREATE TABLE IF NOT EXISTS comment_reactions (
+  CREATE TABLE IF NOT EXISTS COMMENT_REACTIONS (
     user_id INT NOT NULL,
     comment_id BIGINT UNSIGNED NOT NULL,
     state TINYINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, comment_id),
-    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
+    FOREIGN KEY (comment_id) REFERENCES COMMENTS(id) ON DELETE CASCADE
 );`
 
-	_, err := db.Exec(createForumsTableSQL)
+	_, err := db.Exec(createThreadsTableSQL)
 	if err != nil {
-		return fmt.Errorf("failed to create forums table: %v", err)
+		return fmt.Errorf("failed to create Threads table: %v", err)
 	}
 	_, err = db.Exec(createUsersTableSQL)
 	if err != nil {
@@ -65,9 +66,9 @@ func CreateTables(db *sql.DB) error {
 	if err != nil {
 		return fmt.Errorf("failed to create comments table: %v", err)
 	}
-	_, err = db.Exec(createForumReactionsTableSQL)
+	_, err = db.Exec(createThreadReactionsTableSQL)
 	if err != nil {
-		return fmt.Errorf("failed to create forum_reactions table: %v", err)
+		return fmt.Errorf("failed to create Thread_reactions table: %v", err)
 	}
 	_, err = db.Exec(createCommentReactionsTableSQL)
 	if err != nil {

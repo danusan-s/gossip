@@ -1,5 +1,4 @@
-import { useState } from "react";
-import ForumPage from "./pages/ForumPage";
+import ThreadPage from "./pages/ThreadPage";
 import LandingPage from "./pages/LandingPage";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -26,7 +25,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/*" element={<ForumPage />} />
+          <Route path="/*" element={<ThreadPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

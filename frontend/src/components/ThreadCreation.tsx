@@ -15,7 +15,7 @@ interface FormData {
   description: string;
 }
 
-export default function ForumCreation() {
+export default function ThreadCreation() {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -56,7 +56,7 @@ export default function ForumCreation() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `${apiUrl}/forums`,
+        `${apiUrl}/threads`,
         {
           ...formData,
           author: account,
@@ -69,7 +69,7 @@ export default function ForumCreation() {
       );
       console.log("Response:", response.data);
       setFormData({ title: "", description: "" });
-      navigate("/forum");
+      navigate("/thread");
     } catch (err) {
       console.error("Error sending data:", err);
       setError("Failed to submit data.");

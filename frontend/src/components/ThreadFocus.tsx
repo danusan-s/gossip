@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 
 import { Box, Grid2 as Grid, Typography } from "@mui/material";
 import Item from "./Item";
-import ForumSingle from "./ForumSingle";
+import ThreadSingle from "./ThreadSingle";
 
 import CommentList from "./CommentList";
 
-interface Forum {
+interface Thread {
   id: number;
   title: string;
   description: string;
@@ -16,17 +16,17 @@ interface Forum {
   time: string;
 }
 
-export default function Forum() {
+export default function Thread() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { forumID } = useParams<{ forumID: string }>();
-  const id = parseInt(forumID || "", 10);
+  const { threadID } = useParams<{ ThreadID: string }>();
+  const id = parseInt(threadID || "", 10);
   if (isNaN(id)) {
-    return <div>Invalid forum ID</div>;
+    return <div>Invalid Thread ID</div>;
   }
 
-  const [forum, setForum] = useState<Forum>({
+  const [thread, setThread] = useState<Thread>({
     id: 0,
     title: "",
     description: "",
@@ -37,10 +37,12 @@ export default function Forum() {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const fetchForum = async () => {
+    const fetchThread = async () => {
       try {
-        const response = await axios.get<Forum>(`${apiUrl}/forums/${forumID}`);
-        setForum(response.data);
+        const response = await axios.get<Thread>(
+          `${apiUrl}/threads/${threadID}`,
+        );
+        setThread(response.data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
@@ -48,13 +50,13 @@ export default function Forum() {
       }
     };
 
-    fetchForum();
-  }, [forumID]);
+    fetchThread();
+  }, [threadID]);
 
   if (loading)
     return (
       <Item>
-        <Typography variant="h6">Loading forum...</Typography>
+        <Typography variant="h6">Loading Thread...</Typography>
       </Item>
     );
   if (error)
@@ -64,7 +66,7 @@ export default function Forum() {
       </Item>
     );
 
-  if (loading) return <div>Loading forums...</div>;
+  if (loading) return <div>Loading Threads...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -72,9 +74,9 @@ export default function Forum() {
       <Grid container>
         <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
           <Item>
-            <ForumSingle forumData={forum} />
+            <ThreadSingle threadData={thread} />
           </Item>
-          <CommentList forumId={id} />
+          <CommentList threadId={id} />
         </Grid>
       </Grid>
     </Box>

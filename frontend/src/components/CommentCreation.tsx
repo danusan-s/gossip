@@ -4,10 +4,10 @@ import { Box, TextField, Button } from "@mui/material";
 import { useAppSelector } from "../hooks";
 
 export default function Comments({
-  forumId,
+  threadId,
   handleNewComment,
 }: {
-  forumId: number;
+  threadId: number;
   handleNewComment: CallableFunction;
 }) {
   const [formData, setFormData] = useState<string>("");
@@ -34,7 +34,7 @@ export default function Comments({
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `${apiUrl}/forums/${forumId}/comments`,
+        `${apiUrl}/threads/${threadId}/comments`,
         {
           content: formData,
           author: account,

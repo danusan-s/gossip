@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import MainAppBar from "../components/MainAppBar";
-import ForumList from "../components/ForumList";
-import ForumCreation from "../components/ForumCreation";
+import ThreadList from "../components/ThreadList";
+import ThreadCreation from "../components/ThreadCreation";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
-import Forum from "../components/Forum";
+import Thread from "../components/ThreadFocus";
 import { Route, Routes } from "react-router-dom";
 import { useAppDispatch } from "../hooks";
 import { setAccount, unsetAccount } from "../slices/account";
 
-export default function ForumPage() {
+export default function ThreadPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 
@@ -55,12 +55,12 @@ export default function ForumPage() {
     <>
       <MainAppBar />
       <Routes>
-        <Route path="/forum" element={<ForumList />} />
-        <Route path="/forum/search/:searchQuery" element={<ForumList />} />
-        <Route path="/forum/create" element={<ForumCreation />} />
+        <Route path="/thread" element={<ThreadList />} />
+        <Route path="/thread/search/:searchQuery" element={<ThreadList />} />
+        <Route path="/thread/create" element={<ThreadCreation />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/forum/:forumID" element={<Forum />} />
+        <Route path="/thread/:threadID" element={<Thread />} />
         <Route path="/*" element={<div>Page Not found</div>} />
       </Routes>
     </>

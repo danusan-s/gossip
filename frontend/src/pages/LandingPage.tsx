@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 export default function LandingPage() {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/forum");
+    navigate("/thread");
   };
 
   return (
@@ -21,7 +21,7 @@ export default function LandingPage() {
         This is a work in progress
       </Typography>
       <Button variant="contained" onClick={handleClick} sx={{ width: "50%" }}>
-        Go to forum
+        Go to thread
       </Button>
     </Box>
   );

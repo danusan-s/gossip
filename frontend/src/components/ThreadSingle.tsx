@@ -8,7 +8,7 @@ import MoreIcon from "@mui/icons-material/MoreHoriz";
 import LocalTimeChip from "./LocalTimeChip";
 import ReactionBox from "./Reactions";
 
-interface Forum {
+interface Thread {
   id: number;
   title: string;
   description: string;
@@ -16,11 +16,11 @@ interface Forum {
   time: string;
 }
 
-export default function ForumSingle({
-  forumData,
+export default function ThreadSingle({
+  threadData,
   focused = true,
 }: {
-  forumData: Forum;
+  threadData: Thread;
   focused?: boolean;
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -40,8 +40,8 @@ export default function ForumSingle({
   };
 
   const handleDelete = async () => {
-    if (account !== forumData.author) {
-      alert("You do not have permission to delete this forum.");
+    if (account !== threadData.author) {
+      alert("You do not have permission to delete this thread.");
       return;
     }
 
@@ -49,15 +49,15 @@ export default function ForumSingle({
       // Assuming the JWT is stored in localStorage
       const token = localStorage.getItem("token");
 
-      await axios.delete(`${apiUrl}/forums/${forumData.id}`, {
+      await axios.delete(`${apiUrl}/threads/${threadData.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      navigate("/forum");
+      navigate("/thread");
     } catch (err) {
       console.error("Error sending request:", err);
-      alert("Failed to delete forum.");
+      alert("Failed to delete thread.");
     }
   };
 
@@ -70,7 +70,7 @@ export default function ForumSingle({
     handleMenuClose();
   };
 
-  const menuId = "forum-options-menu";
+  const menuId = "thread-options-menu";
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -88,8 +88,8 @@ export default function ForumSingle({
       onClose={handleMenuClose}
     >
       <>
-        {account === forumData.author && (
-          <MenuItem onClick={handleDelete}>Delete Forum</MenuItem>
+        {account === threadData.author && (
+          <MenuItem onClick={handleDelete}>Delete Thread</MenuItem>
         )}
         <MenuItem disabled={copied} onClick={handleCopyLink}>
           {copied ? "Link Copied!" : "Copy Link"}
@@ -107,13 +107,13 @@ export default function ForumSingle({
         }}
       >
         <Chip
-          label={forumData.author}
+          label={threadData.author}
           onClick={(e) => {
             e.stopPropagation();
-            navigate(`/user/${forumData.author}`);
+            navigate(`/user/${threadData.author}`);
           }}
         />
-        <LocalTimeChip time={forumData.time} />
+        <LocalTimeChip time={threadData.time} />
       </Box>
       <Typography
         variant="h6"
@@ -125,7 +125,7 @@ export default function ForumSingle({
           },
         })}
       >
-        {forumData.title}
+        {threadData.title}
       </Typography>
       <Typography
         variant="body1"
@@ -140,10 +140,10 @@ export default function ForumSingle({
           },
         })}
       >
-        {forumData.description}
+        {threadData.description}
       </Typography>
       <Box sx={{ display: "flex", marginTop: "1rem" }}>
-        <ReactionBox id={forumData.id} type={"forums"} />
+        <ReactionBox id={threadData.id} type={"threads"} />
         <Box sx={{ flexGrow: 1 }} />
         <Box>
           {focused && (

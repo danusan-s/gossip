@@ -25,7 +25,7 @@ export default function SignIn() {
       const response = await axios.post(`${apiUrl}/login`, formData);
       localStorage.setItem("token", response.data.token);
       dispatch(setAccount(formData.username));
-      navigate("/forum");
+      navigate("/thread");
       setFormData({ username: "", password: "" });
     } catch (err) {
       alert("Incorrect login details");

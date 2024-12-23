@@ -6,13 +6,13 @@ import CommentCreation from "./CommentCreation";
 
 interface Comment {
   id: number;
-  forum_id: number;
+  thread_id: number;
   author: string;
   content: string;
   time: string;
 }
 
-export default function CommentList({ forumId }: { forumId: number }) {
+export default function CommentList({ threadId }: { threadId: number }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export default function CommentList({ forumId }: { forumId: number }) {
   const fetchComments = async () => {
     try {
       const response = await axios.get<Comment[]>(
-        `${apiUrl}/forums/${forumId}/comments`,
+        `${apiUrl}/threads/${threadId}/comments`,
       );
       setComments(response.data);
     } catch (err) {
@@ -51,7 +51,10 @@ export default function CommentList({ forumId }: { forumId: number }) {
 
   return (
     <Box sx={{ margin: "2rem 0" }}>
-      <CommentCreation forumId={forumId} handleNewComment={handleNewComment} />
+      <CommentCreation
+        threadId={threadId}
+        handleNewComment={handleNewComment}
+      />
       <Typography variant="h6" sx={{ margin: "2rem 0" }}>
         Comments:
       </Typography>

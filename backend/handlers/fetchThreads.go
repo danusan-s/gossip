@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ForumGet struct {
+type ThreadGet struct {
 	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
@@ -19,10 +19,10 @@ type ForumGet struct {
 	Time        string `json:"time"`
 }
 
-// GetAllForumsHandler retrieves all forums from the database
-func GetAllForumsHandler(db *sql.DB) http.HandlerFunc {
+// GetAllThreadsHandler retrieves all Threads from the database
+func GetAllThreadsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for GetAllForums")
+		log.Println("Received request for GetAllThreads")
 
 		if r.Method != http.MethodGet {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -30,7 +30,7 @@ func GetAllForumsHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		rows, err := db.Query("SELECT id, title, description, author, created_at FROM forums")
+		rows, err := db.Query("SELECT id, title, description, author, created_at FROM THREADS")
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
 			log.Println("Error querying database:", err)
@@ -38,17 +38,17 @@ func GetAllForumsHandler(db *sql.DB) http.HandlerFunc {
 		}
 		defer rows.Close()
 
-		var forums []ForumGet
+		var threads []ThreadGet
 		for rows.Next() {
-			var forum ForumGet
-			var forumTime time.Time
-			if err := rows.Scan(&forum.ID, &forum.Title, &forum.Description, &forum.Author, &forumTime); err != nil {
+			var thread ThreadGet
+			var threadTime time.Time
+			if err := rows.Scan(&thread.ID, &thread.Title, &thread.Description, &thread.Author, &threadTime); err != nil {
 				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
 				log.Println("Error parsing database row:", err)
 				return
 			}
-			forum.Time = forumTime.Format(time.RFC3339)
-			forums = append(forums, forum)
+			thread.Time = threadTime.Format(time.RFC3339)
+			threads = append(threads, thread)
 		}
 
 		if err := rows.Err(); err != nil {
@@ -58,19 +58,19 @@ func GetAllForumsHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(forums); err != nil {
+		if err := json.NewEncoder(w).Encode(threads); err != nil {
 			http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
 			log.Println("Error encoding JSON:", err)
 		}
 
-		log.Println("Successfully fetched forums")
+		log.Println("Successfully fetched threads")
 	}
 }
 
-// GetSearchForumsHandler retrieves all forums from the database
-func GetSearchForumsHandler(db *sql.DB) http.HandlerFunc {
+// GetSearchThreadsHandler retrieves all Threads from the database
+func GetSearchThreadsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for GetSearchForums")
+		log.Println("Received request for GetSearchThreads")
 
 		if r.Method != http.MethodGet {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -82,7 +82,7 @@ func GetSearchForumsHandler(db *sql.DB) http.HandlerFunc {
 		search := vars["searchTerm"]
 		log.Printf("Search Term: %s", search)
 
-		rows, err := db.Query("SELECT id, title, description, author, created_at FROM forums WHERE title LIKE ?", "%"+search+"%")
+		rows, err := db.Query("SELECT id, title, description, author, created_at FROM THREADS WHERE title LIKE ?", "%"+search+"%")
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
 			log.Println("Error querying database:", err)
@@ -90,17 +90,17 @@ func GetSearchForumsHandler(db *sql.DB) http.HandlerFunc {
 		}
 		defer rows.Close()
 
-		var forums []ForumGet
+		var threads []ThreadGet
 		for rows.Next() {
-			var forum ForumGet
-			var forumTime time.Time
-			if err := rows.Scan(&forum.ID, &forum.Title, &forum.Description, &forum.Author, &forumTime); err != nil {
+			var thread ThreadGet
+			var threadTime time.Time
+			if err := rows.Scan(&thread.ID, &thread.Title, &thread.Description, &thread.Author, &threadTime); err != nil {
 				http.Error(w, "Failed to parse database rows", http.StatusInternalServerError)
 				log.Println("Error parsing database row:", err)
 				return
 			}
-			forum.Time = forumTime.Format(time.RFC3339)
-			forums = append(forums, forum)
+			thread.Time = threadTime.Format(time.RFC3339)
+			threads = append(threads, thread)
 		}
 
 		if err := rows.Err(); err != nil {
@@ -110,28 +110,28 @@ func GetSearchForumsHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(forums); err != nil {
+		if err := json.NewEncoder(w).Encode(threads); err != nil {
 			http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
 			log.Println("Error encoding JSON:", err)
 		}
 
-		log.Println("Successfully fetched forums with search term", search)
+		log.Println("Successfully fetched threads with search term", search)
 	}
 }
 
-// GetForumByIDHandler retrieves a specific forum by ID from the database
-func GetForumByIDHandler(db *sql.DB) http.HandlerFunc {
+// GetThreadByIDHandler retrieves a specific Thread by ID from the database
+func GetThreadByIDHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for GetForumByID")
+		log.Println("Received request for GetThreadByID")
 
 		vars := mux.Vars(r)
 		idStr := vars["id"]
-		log.Printf("Forum ID: %s", idStr)
+		log.Printf("Thread ID: %s", idStr)
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "Invalid forum ID", http.StatusBadRequest)
-			log.Println("Invalid forum ID:", err)
+			http.Error(w, "Invalid Thread ID", http.StatusBadRequest)
+			log.Println("Invalid Thread ID:", err)
 			return
 		}
 
@@ -141,33 +141,33 @@ func GetForumByIDHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT title, description, author, created_at FROM forums WHERE id = ?"
+		query := "SELECT title, description, author, created_at FROM THREADS WHERE id = ?"
 		row := db.QueryRow(query, id)
 
-		var forum ForumGet
-		forum.ID = id
-		var forumTime time.Time
-		if err := row.Scan(&forum.Title, &forum.Description, &forum.Author, &forumTime); err != nil {
+		var thread ThreadGet
+		thread.ID = id
+		var threadTime time.Time
+		if err := row.Scan(&thread.Title, &thread.Description, &thread.Author, &threadTime); err != nil {
 			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
 			log.Println("Error parsing database row:", err)
 			return
 		}
-		forum.Time = forumTime.Format(time.RFC3339)
+		thread.Time = threadTime.Format(time.RFC3339)
 
 		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(forum); err != nil {
+		if err := json.NewEncoder(w).Encode(thread); err != nil {
 			http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
 			log.Println("Error encoding JSON:", err)
 		}
 
-		log.Printf("Successfully fetched forum with ID %d", forum.ID)
+		log.Printf("Successfully fetched thread with ID %d", thread.ID)
 	}
 }
 
-// GetForumsByUserHandler retrieves all forums by a specific user from the database
-func GetForumsByUserHandler(db *sql.DB) http.HandlerFunc {
+// GetThreadsByUserHandler retrieves all Threads by a specific user from the database
+func GetThreadsByUserHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Received request for GetForumByID")
+		log.Println("Received request for GetThreadByID")
 
 		vars := mux.Vars(r)
 		user := vars["user"]
@@ -179,25 +179,25 @@ func GetForumsByUserHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT id, title, description, created_at FROM forums WHERE author = ?"
+		query := "SELECT id, title, description, created_at FROM THREADS WHERE author = ?"
 		row := db.QueryRow(query, user)
 
-		var forum ForumGet
-		forum.Author = user
-		var forumTime time.Time
-		if err := row.Scan(&forum.ID, &forum.Title, &forum.Description, &forumTime); err != nil {
+		var thread ThreadGet
+		thread.Author = user
+		var threadTime time.Time
+		if err := row.Scan(&thread.ID, &thread.Title, &thread.Description, &threadTime); err != nil {
 			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
 			log.Println("Error parsing database row:", err)
 			return
 		}
-		forum.Time = forumTime.Format(time.RFC3339)
+		thread.Time = threadTime.Format(time.RFC3339)
 
 		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(forum); err != nil {
+		if err := json.NewEncoder(w).Encode(thread); err != nil {
 			http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
 			log.Println("Error encoding JSON:", err)
 		}
 
-		log.Printf("Successfully fetched forum with author %s", forum.Author)
+		log.Printf("Successfully fetched thread with author %s", thread.Author)
 	}
 }

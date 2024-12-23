@@ -38,7 +38,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 
 		// Fetch user from the database
 		var hash string
-		err := db.QueryRow("SELECT password_hash FROM users WHERE username = ?", req.Username).Scan(&hash)
+		err := db.QueryRow("SELECT password_hash FROM USERS WHERE username = ?", req.Username).Scan(&hash)
 		if err == sql.ErrNoRows {
 			http.Error(w, "Username does not exist", http.StatusUnauthorized)
 			return

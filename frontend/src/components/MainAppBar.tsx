@@ -28,7 +28,7 @@ import {
 import ThemeSwitch from "./ThemeSwitch";
 import SearchBar from "./SearchBar";
 
-export default function ForumAppBar() {
+export default function ThreadAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -69,7 +69,7 @@ export default function ForumAppBar() {
     dispatch(unsetAccount());
     localStorage.removeItem("token");
     handleMenuClose();
-    navigate("/forum");
+    navigate("/thread");
   };
 
   const handleAccountProfile = () => {
@@ -130,7 +130,7 @@ export default function ForumAppBar() {
     >
       <MenuItem
         onClick={() => {
-          navigate("/forum/create");
+          navigate("/thread/create");
           handleMobileMenuClose();
         }}
       >
@@ -186,7 +186,7 @@ export default function ForumAppBar() {
           <IconButton
             sx={{ display: { xs: "flex", md: "none" }, marginRight: "1rem" }}
             color="inherit"
-            onClick={() => navigate("/forum")}
+            onClick={() => navigate("/thread")}
           >
             <HomeIcon />
           </IconButton>
@@ -200,7 +200,7 @@ export default function ForumAppBar() {
               },
             }}
             rel="noopener"
-            onClick={() => navigate("/forum")}
+            onClick={() => navigate("/thread")}
           >
             <Typography variant="h6" component="div">
               Gossip
@@ -219,7 +219,7 @@ export default function ForumAppBar() {
                 size="large"
                 aria-label="create new post"
                 color="inherit"
-                onClick={() => navigate("/forum/create")}
+                onClick={() => navigate("/thread/create")}
               >
                 <AddIcon />
               </IconButton>

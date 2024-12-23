@@ -41,7 +41,7 @@ func GetCommentReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT COUNT(*) FROM comment_reactions WHERE comment_id=? AND state=?"
+		query := "SELECT COUNT(*) FROM COMMENT_REACTIONS WHERE comment_id=? AND state=?"
 		likeRow := db.QueryRow(query, id, 1)
 		dislikeRow := db.QueryRow(query, id, 0)
 
@@ -94,7 +94,7 @@ func GetCommentUserReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "SELECT state FROM comment_reactions WHERE comment_id=? AND user_id=?"
+		query := "SELECT state FROM COMMENT_REACTIONS WHERE comment_id=? AND user_id=?"
 		row := db.QueryRow(query, id, user)
 
 		var reaction CommentReactionCreate
@@ -129,7 +129,7 @@ func UpdateCommentReaction(db *sql.DB) http.HandlerFunc {
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
 
-		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
+		user_id, err := db.Exec("SELECT id FROM USERS WHERE username = ?", user)
 
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -156,7 +156,7 @@ func UpdateCommentReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "INSERT INTO comment_reactions (user_id,comment_id,state) VALUES(?,?,?) ON DUPLICATE KEY UPDATE state = VALUES(state)"
+		query := "INSERT INTO COMMENT_REACTIONS (user_id,comment_id,state) VALUES(?,?,?) ON DUPLICATE KEY UPDATE state = VALUES(state)"
 
 		_, err = db.Exec(query, user_id, id, body.Reaction)
 
@@ -178,7 +178,7 @@ func DeleteCommentReaction(db *sql.DB) http.HandlerFunc {
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
 
-		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
+		user_id, err := db.Exec("SELECT id FROM USERS WHERE username = ?", user)
 
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -198,7 +198,7 @@ func DeleteCommentReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "DELETE FROM comment_reactions WHERE user_id=? AND comment_id=?"
+		query := "DELETE FROM COMMENT_REACTIONS WHERE user_id=? AND comment_id=?"
 
 		_, err = db.Exec(query, user_id, id)
 
