@@ -78,7 +78,7 @@ export default function ThreadCreation() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
+      await axios.post(
         `${apiUrl}/threads`,
         {
           ...formData,

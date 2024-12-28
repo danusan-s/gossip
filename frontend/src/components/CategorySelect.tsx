@@ -49,6 +49,7 @@ export default function CategorySelect({
     event: React.MouseEvent<HTMLElement>,
     newCategory: string | null,
   ) => {
+    event.preventDefault();
     setCategory(newCategory);
   };
 

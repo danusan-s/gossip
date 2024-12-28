@@ -32,7 +32,7 @@ export default function Comments({
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
+      await axios.post(
         `${apiUrl}/threads/${threadId}/comments`,
         {
           content: formData,
