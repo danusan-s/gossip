@@ -11,7 +11,7 @@ import (
 
 func Connect() (*sql.DB, error) {
 	// Load environment variables from .env file
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
 		return nil, fmt.Errorf("failed to load .env file: %v", err)
 	}
@@ -24,7 +24,7 @@ func Connect() (*sql.DB, error) {
 	dbName := os.Getenv("DB_NAME")
 
 	// Construct the DSN (Data Source Name)
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&tls=true", dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	// Open the database connection
 	db, err := sql.Open("mysql", dsn)

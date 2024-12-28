@@ -18,7 +18,7 @@ type User struct {
 }
 
 func main() {
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -27,6 +27,7 @@ func main() {
 	port = ":" + port
 
 	// Initialize database connection
+	log.Println("Connecting to database...")
 	database, err := db.Connect()
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)

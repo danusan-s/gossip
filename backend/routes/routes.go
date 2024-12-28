@@ -8,6 +8,7 @@ import (
 )
 
 func SetupRoutes(db *sql.DB) *mux.Router {
+	// Create a new router
 	router := mux.NewRouter()
 
 	// Define routes

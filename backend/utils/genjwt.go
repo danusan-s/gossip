@@ -10,7 +10,7 @@ import (
 
 func GenerateJWT(username string) (string, error) {
 	// Load environment variables from .env file
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
 		return "", err
 	}
