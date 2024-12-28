@@ -17,7 +17,7 @@ func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// Load environment variables from .env file
-		err := godotenv.Load(".env")
+		err := godotenv.Load()
 		if err != nil {
 			return
 		}

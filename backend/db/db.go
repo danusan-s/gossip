@@ -11,7 +11,7 @@ import (
 
 func Connect() (*sql.DB, error) {
 	// Load environment variables from .env file
-	err := godotenv.Load(".env")
+	err := godotenv.Load()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load .env file: %v", err)
 	}
