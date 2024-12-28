@@ -78,7 +78,6 @@ export default function ReactionBox({
             },
           },
         );
-        console.log(`ID: ${id} Reaction: ${response.data.reaction}`);
         if (response.data.reaction === "1") {
           setReaction("like");
         } else if (response.data.reaction === "0") {

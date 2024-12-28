@@ -191,16 +191,16 @@ func DeleteThreadReaction(db *sql.DB) http.HandlerFunc {
 		log.Printf("Thread ID: %s", idStr)
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
+		if user == "" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
 		var user_id int
 		err := db.QueryRow("SELECT id FROM USERS WHERE username = ?", user).Scan(&user_id)
 		if err != nil {
 			http.Error(w, "Failed to get user ID", http.StatusInternalServerError)
 			log.Println("Error getting user ID:", err)
-			return
-		}
-
-		if user == "" {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
