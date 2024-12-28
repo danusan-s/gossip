@@ -11,8 +11,8 @@ import (
 )
 
 type ThreadReactionGet struct {
-	Likes    string `json:"like"`
-	Dislikes string `json:"dislike"`
+	Likes    int `json:"like"`
+	Dislikes int `json:"dislike"`
 }
 
 type ThreadReactionCreate struct {
@@ -94,8 +94,16 @@ func GetThreadUserReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		var user_id int
+		err = db.QueryRow("SELECT id FROM USERS WHERE username = ?", user).Scan(&user_id)
+		if err != nil {
+			http.Error(w, "Failed to get user ID", http.StatusInternalServerError)
+			log.Println("Error getting user ID:", err)
+			return
+		}
+
 		query := "SELECT state FROM THREAD_REACTIONS WHERE thread_id=? AND user_id=?"
-		row := db.QueryRow(query, id, user)
+		row := db.QueryRow(query, id, user_id)
 
 		var reaction ThreadReactionCreate
 		if err := row.Scan(&reaction.Reaction); err != nil {
@@ -134,7 +142,13 @@ func UpdateThreadReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		user_id, err := db.Exec("SELECT id FROM USERS WHERE username = ?", user)
+		var user_id int
+		err := db.QueryRow("SELECT id FROM USERS WHERE username = ?", user).Scan(&user_id)
+		if err != nil {
+			http.Error(w, "Failed to get user ID", http.StatusInternalServerError)
+			log.Println("Error getting user ID:", err)
+			return
+		}
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
@@ -177,7 +191,13 @@ func DeleteThreadReaction(db *sql.DB) http.HandlerFunc {
 		log.Printf("Thread ID: %s", idStr)
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
-		user_id, err := db.Exec("SELECT id FROM users WHERE username = ?", user)
+		var user_id int
+		err := db.QueryRow("SELECT id FROM USERS WHERE username = ?", user).Scan(&user_id)
+		if err != nil {
+			http.Error(w, "Failed to get user ID", http.StatusInternalServerError)
+			log.Println("Error getting user ID:", err)
+			return
+		}
 
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

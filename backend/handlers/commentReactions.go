@@ -11,8 +11,8 @@ import (
 )
 
 type CommentReactionGet struct {
-	Likes    string `json:"like"`
-	Dislikes string `json:"dislike"`
+	Likes    int `json:"like"`
+	Dislikes int `json:"dislike"`
 }
 
 type CommentReactionCreate struct {
@@ -94,8 +94,16 @@ func GetCommentUserReaction(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		var user_id int
+		err = db.QueryRow("SELECT id FROM USERS WHERE username = ?", user).Scan(&user_id)
+		if err != nil {
+			http.Error(w, "Failed to get user ID", http.StatusInternalServerError)
+			log.Println("Error getting user ID:", err)
+			return
+		}
+
 		query := "SELECT state FROM COMMENT_REACTIONS WHERE comment_id=? AND user_id=?"
-		row := db.QueryRow(query, id, user)
+		row := db.QueryRow(query, id, user_id)
 
 		var reaction CommentReactionCreate
 		if err := row.Scan(&reaction.Reaction); err != nil {
@@ -129,7 +137,13 @@ func UpdateCommentReaction(db *sql.DB) http.HandlerFunc {
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
 
-		user_id, err := db.Exec("SELECT id FROM USERS WHERE username = ?", user)
+		var user_id int
+		err := db.QueryRow("SELECT id FROM USERS WHERE username = ?", user).Scan(&user_id)
+		if err != nil {
+			http.Error(w, "Failed to get user ID", http.StatusInternalServerError)
+			log.Println("Error getting user ID:", err)
+			return
+		}
 
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -178,7 +192,13 @@ func DeleteCommentReaction(db *sql.DB) http.HandlerFunc {
 
 		user := r.Context().Value("user").(string) // Retrieving the user (username)
 
-		user_id, err := db.Exec("SELECT id FROM USERS WHERE username = ?", user)
+		var user_id int
+		err := db.QueryRow("SELECT id FROM USERS WHERE username = ?", user).Scan(&user_id)
+		if err != nil {
+			http.Error(w, "Failed to get user ID", http.StatusInternalServerError)
+			log.Println("Error getting user ID:", err)
+			return
+		}
 
 		if user == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

@@ -78,6 +78,7 @@ export default function ReactionBox({
             },
           },
         );
+        console.log(`ID: ${id} Reaction: ${response.data.reaction}`);
         if (response.data.reaction === "1") {
           setReaction("like");
         } else if (response.data.reaction === "0") {
@@ -112,12 +113,12 @@ export default function ReactionBox({
     } else {
       try {
         const token = localStorage.getItem("token");
-        const response = newReaction === "like" ? 1 : 0;
+        const reactionState = newReaction === "like" ? "1" : "0";
 
         await axios.post(
           `${apiUrl}/${type}/${id}/reactions`,
           {
-            reaction: `${response}`,
+            reaction: `${reactionState}`,
           },
           {
             headers: {

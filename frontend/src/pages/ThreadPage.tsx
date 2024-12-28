@@ -5,6 +5,7 @@ import ThreadCreation from "../components/ThreadCreation";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
 import Thread from "../components/ThreadFocus";
+import Profile from "../components/Profile";
 import { Route, Routes } from "react-router-dom";
 import { useAppDispatch } from "../hooks";
 import { setAccount, unsetAccount } from "../slices/account";
@@ -61,6 +62,7 @@ export default function ThreadPage() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/thread/:threadID" element={<Thread />} />
+        <Route path="/profile/:userName" element={<Profile />} />
         <Route path="/*" element={<div>Page Not found</div>} />
       </Routes>
     </>

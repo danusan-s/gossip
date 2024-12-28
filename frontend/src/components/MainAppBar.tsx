@@ -72,12 +72,12 @@ export default function ThreadAppBar() {
     navigate("/thread");
   };
 
+  const account = useAppSelector((state) => state.account.value);
+
   const handleAccountProfile = () => {
     handleMenuClose();
-    navigate("/profile");
+    navigate(`/profile/${account}`);
   };
-
-  const account = useAppSelector((state) => state.account.value);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
