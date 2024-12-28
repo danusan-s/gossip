@@ -3,18 +3,11 @@ package utils
 import (
 	"encoding/base64"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 	"os"
 	"time"
 )
 
 func GenerateJWT(username string) (string, error) {
-	// Load environment variables from .env file
-	err := godotenv.Load(".env")
-	if err != nil {
-		return "", err
-	}
-
 	encodedSecret := os.Getenv("JWT_SECRET")
 
 	decodedSecret, err := base64.StdEncoding.DecodeString(encodedSecret)

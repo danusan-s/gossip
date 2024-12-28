@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
 	"web-forum/db"
 	"web-forum/routes"
 )
@@ -18,11 +17,6 @@ type User struct {
 }
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	port := os.Getenv("PORT")
 	port = ":" + port
 

@@ -9,19 +9,11 @@ import (
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 )
 
 // Middleware to Validate JWT
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		// Load environment variables from .env file
-		err := godotenv.Load()
-		if err != nil {
-			return
-		}
-
 		encodedSecret := os.Getenv("JWT_SECRET")
 
 		decodedSecret, err := base64.StdEncoding.DecodeString(encodedSecret)
