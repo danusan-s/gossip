@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ThreadList from "./ThreadList";
+import { Box, Grid2 as Grid } from "@mui/material";
 
 interface Thread {
   id: number;
@@ -46,5 +47,13 @@ export default function ThreadHome() {
   if (loading) return <div>Loading Threads...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  return <ThreadList threads={threads} searchQuery={searchQuery} />;
+  return (
+    <Box sx={{ margin: "1rem" }}>
+      <Grid container>
+        <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
+          <ThreadList threads={threads} searchQuery={searchQuery} />
+        </Grid>
+      </Grid>
+    </Box>
+  );
 }

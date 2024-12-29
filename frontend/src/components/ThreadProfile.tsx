@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ThreadList from "./ThreadList";
+import { Typography } from "@mui/material";
 
 interface Thread {
   id: number;
@@ -12,7 +13,7 @@ interface Thread {
   time: string;
 }
 
-export default function ThreadHome() {
+export default function ThreadProfile() {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,5 +43,12 @@ export default function ThreadHome() {
   if (loading) return <div>Loading Threads...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  return <ThreadList threads={threads} />;
+  return (
+    <>
+      <Typography variant="h5" gutterBottom>
+        Threads made by user:
+      </Typography>
+      <ThreadList threads={threads} />
+    </>
+  );
 }

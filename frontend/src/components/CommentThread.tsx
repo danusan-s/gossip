@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import CommentCreation from "./CommentCreation";
 import CommentList from "./CommentList";
 
@@ -55,6 +55,10 @@ export default function CommentThread({ threadId }: { threadId: number }) {
         threadId={threadId}
         handleNewComment={handleNewComment}
       />
+      <Typography variant="h6" sx={{ margin: "2rem 0" }}>
+        Comments:
+      </Typography>
+
       <CommentList
         comments={comments}
         handleDeleteComment={handleDeleteComment}

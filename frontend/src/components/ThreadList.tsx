@@ -43,28 +43,24 @@ export default function ThreadList({
   const emptyList = !list || list.every((value) => value === null);
 
   return (
-    <Box sx={{ margin: "1rem" }}>
-      <Grid container>
-        <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
-          <Box display="flex" justifyContent="center" marginBottom="1rem">
-            <CategorySelect category={category} setCategory={setCategory} />
-          </Box>
-          <Stack spacing={2} alignItems="center">
-            {searchQuery && (
-              <Typography variant="h5" gutterBottom>
-                Search Results for "{searchQuery}":
-              </Typography>
-            )}
-            {emptyList ? (
-              <Typography variant="h6" gutterBottom>
-                No threads found
-              </Typography>
-            ) : (
-              list
-            )}
-          </Stack>
-        </Grid>
-      </Grid>
-    </Box>
+    <>
+      <Box display="flex" justifyContent="center" marginBottom="1rem">
+        <CategorySelect category={category} setCategory={setCategory} />
+      </Box>
+      <Stack spacing={2} alignItems="center">
+        {searchQuery && (
+          <Typography variant="h5" gutterBottom>
+            Search Results for "{searchQuery}":
+          </Typography>
+        )}
+        {emptyList ? (
+          <Typography variant="h6" gutterBottom>
+            No threads found
+          </Typography>
+        ) : (
+          list
+        )}
+      </Stack>
+    </>
   );
 }

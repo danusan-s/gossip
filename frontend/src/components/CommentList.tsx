@@ -17,25 +17,20 @@ export default function CommentList({
   handleDeleteComment: CallableFunction;
 }) {
   return (
-    <>
-      <Typography variant="h6" sx={{ margin: "2rem 0" }}>
-        Comments:
-      </Typography>
-      <Stack spacing={2}>
-        {comments ? (
-          comments.map((comment: Comment) => (
-            <CommentSingle
-              key={comment.id}
-              commentData={comment}
-              handleDeleteComment={handleDeleteComment}
-            />
-          ))
-        ) : (
-          <Typography key="0" variant="body1" paddingLeft="2rem">
-            No comments
-          </Typography>
-        )}
-      </Stack>
-    </>
+    <Stack spacing={2}>
+      {comments ? (
+        comments.map((comment: Comment) => (
+          <CommentSingle
+            key={comment.id}
+            commentData={comment}
+            handleDeleteComment={handleDeleteComment}
+          />
+        ))
+      ) : (
+        <Typography key="0" variant="body1" paddingLeft="2rem">
+          No comments
+        </Typography>
+      )}
+    </Stack>
   );
 }
