@@ -1,3 +1,5 @@
+import ThreadProfile from "../components/ThreadProfile";
+
 export default function Profile() {
-  return <div>Work in Progress...</div>;
+  return <ThreadProfile />;
 }

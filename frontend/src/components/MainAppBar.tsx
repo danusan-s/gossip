@@ -76,7 +76,7 @@ export default function ThreadAppBar() {
 
   const handleAccountProfile = () => {
     handleMenuClose();
-    navigate(`/profile/${account}`);
+    navigate(`/user/${account}`);
   };
 
   const menuId = "primary-search-account-menu";
@@ -211,7 +211,7 @@ export default function ThreadAppBar() {
             <ThemeSwitch
               checked={useAppSelector((state) => state.theme.value)}
               onChange={() => dispatch(toggleDarkTheme())}
-            ></ThemeSwitch>
+            />
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {account !== null && (

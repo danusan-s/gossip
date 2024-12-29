@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import MainAppBar from "../components/MainAppBar";
-import ThreadList from "../components/ThreadList";
+import ThreadHome from "../components/ThreadHome";
 import ThreadCreation from "../components/ThreadCreation";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
@@ -56,13 +56,13 @@ export default function ThreadPage() {
     <>
       <MainAppBar />
       <Routes>
-        <Route path="/thread" element={<ThreadList />} />
-        <Route path="/thread/search/:searchQuery" element={<ThreadList />} />
+        <Route path="/thread" element={<ThreadHome />} />
+        <Route path="/thread/search/:searchQuery" element={<ThreadHome />} />
         <Route path="/thread/create" element={<ThreadCreation />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/thread/:threadID" element={<Thread />} />
-        <Route path="/profile/:userName" element={<Profile />} />
+        <Route path="/user/:userName" element={<Profile />} />
         <Route path="/*" element={<div>Page Not found</div>} />
       </Routes>
     </>

@@ -1,4 +1,4 @@
-import ThreadPage from "./pages/ThreadPage";
+import ForumPage from "./pages/ForumPage";
 import LandingPage from "./pages/LandingPage";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -25,7 +25,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/*" element={<ThreadPage />} />
+          <Route path="/*" element={<ForumPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom";
 import { Box, Grid2 as Grid, Typography } from "@mui/material";
 import Item from "./Item";
 import ThreadSingle from "./ThreadSingle";
-
-import CommentList from "./CommentList";
+import CommentThread from "./CommentThread";
 
 interface Thread {
   id: number;
@@ -78,7 +77,7 @@ export default function Thread() {
           <Item>
             <ThreadSingle threadData={thread} />
           </Item>
-          <CommentList threadId={id} />
+          <CommentThread threadId={id} />
         </Grid>
       </Grid>
     </Box>

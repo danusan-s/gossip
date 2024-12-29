@@ -1,10 +1,9 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
 import { Box, Grid2 as Grid, Stack, Typography } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import CategorySelect from "./CategorySelect";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
-import CategorySelect from "./CategorySelect";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface Thread {
   id: number;
@@ -15,57 +14,33 @@ interface Thread {
   time: string;
 }
 
-export default function ThreadList() {
-  const [threads, setThreads] = useState<Thread[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+export default function ThreadList({
+  threads,
+  searchQuery = undefined,
+}: {
+  threads: Thread[];
+  searchQuery?: string | undefined;
+}) {
   const [category, setCategory] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-
   const navigate = useNavigate();
-  const { searchQuery } = useParams<{ searchQuery: string }>();
 
-  const apiUrl = import.meta.env.VITE_API_URL;
+  console.log(threads);
 
-  useEffect(() => {
-    const fetchThreads = async () => {
-      try {
-        if (searchQuery) {
-          const response = await axios.get<Thread[]>(
-            `${apiUrl}/threads/search/${searchQuery}`,
-          );
-          setThreads(response.data);
-        } else {
-          const response = await axios.get<Thread[]>(`${apiUrl}/threads`);
-          setThreads(response.data);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const list = threads
+    ? threads.map((value) => {
+        if (category && value.category !== category) return null;
+        return (
+          <Hoverable
+            onClick={() => navigate(`/thread/${value.id}`)}
+            key={value.id}
+          >
+            <ThreadSingle threadData={value} focused={false} />
+          </Hoverable>
+        );
+      })
+    : null;
 
-    fetchThreads();
-  }, [searchQuery]);
-
-  if (loading) return <div>Loading Threads...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  const list = threads ? (
-    threads.map((value) => {
-      if (category && value.category !== category) return null;
-      return (
-        <Hoverable
-          onClick={() => navigate(`/thread/${value.id}`)}
-          key={value.id}
-        >
-          <ThreadSingle threadData={value} focused={false} />
-        </Hoverable>
-      );
-    })
-  ) : (
-    <div>No Threads found</div>
-  );
+  const emptyList = !list || list.every((value) => value === null);
 
   return (
     <Box sx={{ margin: "1rem" }}>
@@ -80,7 +55,13 @@ export default function ThreadList() {
                 Search Results for "{searchQuery}":
               </Typography>
             )}
-            {list}
+            {emptyList ? (
+              <Typography variant="h6" gutterBottom>
+                No threads found
+              </Typography>
+            ) : (
+              list
+            )}
           </Stack>
         </Grid>
       </Grid>

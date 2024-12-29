@@ -46,6 +46,10 @@ export default function ThreadSingle({
       return;
     }
 
+    const confirmed = confirm("Are you sure you want to delete this thread ?");
+
+    if (!confirmed) return;
+
     try {
       const token = localStorage.getItem("token");
 
