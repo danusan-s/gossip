@@ -19,7 +19,7 @@ type CommentGet struct {
 	Time     string `json:"time"`
 }
 
-// GetCommentsByUserHandler retrieves all comments of a Thread from the database
+// GetCommentsByThreadHandler retrieves all comments of a Thread from the database
 func GetCommentsByThreadHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)

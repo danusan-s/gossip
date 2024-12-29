@@ -209,31 +209,41 @@ func GetThreadsByUserHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		query := "SELECT id, title, description, category_id, created_at FROM THREADS WHERE author = ?"
-		row := db.QueryRow(query, user)
+		rows, err := db.Query(query, user)
 
-		var thread ThreadGet
-		thread.Author = user
-		var threadTime time.Time
-		var categoryID int
-		if err := row.Scan(&thread.ID, &thread.Title, &thread.Description, &categoryID, &threadTime); err != nil {
-			http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
-			log.Println("Error parsing database row:", err)
-			return
-		}
-		var err error
-		thread.Category, err = findCategoryByID(db, categoryID)
 		if err != nil {
-			http.Error(w, "Failed to find category", http.StatusInternalServerError)
+			http.Error(w, "Failed to query database", http.StatusInternalServerError)
+			log.Println("Error querying database:", err)
 			return
 		}
-		thread.Time = threadTime.Format(time.RFC3339)
+		defer rows.Close()
+
+		var threads []ThreadGet
+		for rows.Next() {
+			var thread ThreadGet
+			thread.Author = user
+			var threadTime time.Time
+			var categoryID int
+			if err = rows.Scan(&thread.ID, &thread.Title, &thread.Description, &categoryID, &threadTime); err != nil {
+				http.Error(w, "Failed to parse database row", http.StatusInternalServerError)
+				log.Println("Error parsing database row:", err)
+				return
+			}
+			thread.Category, err = findCategoryByID(db, categoryID)
+			if err != nil {
+				http.Error(w, "Failed to find category", http.StatusInternalServerError)
+				return
+			}
+			thread.Time = threadTime.Format(time.RFC3339)
+			threads = append(threads, thread)
+		}
 
 		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(thread); err != nil {
+		if err := json.NewEncoder(w).Encode(threads); err != nil {
 			http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
 			log.Println("Error encoding JSON:", err)
 		}
 
-		log.Printf("Successfully fetched thread with author %s", thread.Author)
+		log.Printf("Successfully fetched threads with author %s", user)
 	}
 }
