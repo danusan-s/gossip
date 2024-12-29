@@ -1,4 +1,4 @@
-import { Box, Grid2 as Grid, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import CategorySelect from "./CategorySelect";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
