@@ -4,9 +4,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "./hooks";
-import { useEffect, useState } from "react";
-import { setAccount, unsetAccount } from "./slices/account";
-import { toggleDarkTheme } from "./slices/theme";
+import { useEffect } from "react";
+import { setDarkTheme, setLightTheme } from "./slices/theme";
 
 const darkTheme = createTheme({
   palette: {
@@ -21,61 +20,25 @@ const lightTheme = createTheme({
 });
 
 export default function App() {
-  const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 
-  const apiUrl = import.meta.env.VITE_API_URL;
-
-  const verifyToken = async (token: string) => {
-    try {
-      const response = await fetch(`${apiUrl}/login/token`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        dispatch(setAccount(userData.user));
-      } else {
-        console.error("Token verification failed");
-        dispatch(unsetAccount());
-      }
-    } catch (error) {
-      console.error("Error verifying token:", error);
-      localStorage.removeItem("token");
-      dispatch(unsetAccount());
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const darkMode = useAppSelector((state) => state.theme.value);
-
-  const setThemePreference = () => {
+  const setThemePreference = async () => {
     const theme = localStorage.getItem("preferDarkMode");
-    if (theme == "true" && !darkMode) {
-      dispatch(toggleDarkTheme());
-    } else if (theme == "false" && darkMode) {
-      dispatch(toggleDarkTheme());
+    if (theme == "true") {
+      dispatch(setDarkTheme());
+    } else if (theme == "false") {
+      dispatch(setLightTheme());
     }
   };
 
   useEffect(() => {
     setThemePreference();
-    const token = localStorage.getItem("token");
-    if (token) {
-      verifyToken(token);
-    } else {
-      setLoading(false);
-    }
-  }, []);
+  });
 
-  if (loading) return <div>Loading User...</div>;
+  const preferredTheme = useAppSelector((state) => state.theme.value);
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+    <ThemeProvider theme={preferredTheme ? darkTheme : lightTheme}>
       <CssBaseline />
       <Router>
         <Routes>

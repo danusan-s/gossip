@@ -111,6 +111,8 @@ export default function ThreadAppBar() {
     </Menu>
   );
 
+  const darkTheme = useAppSelector((state) => state.theme.value);
+
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
@@ -163,19 +165,19 @@ export default function ThreadAppBar() {
       )}
       <MenuItem>
         <ThemeSwitch
-          checked={useAppSelector((state) => state.theme.value)}
+          checked={darkTheme}
           sx={{ transform: "translateX(-6px)" }}
           onClick={() => {
-            localStorage.setItem(
-              "preferDarkMode",
-              !useAppSelector((state) => state.theme.value) ? "true" : "false",
-            );
+            localStorage.setItem("preferDarkMode", JSON.stringify(!darkTheme));
             dispatch(toggleDarkTheme());
           }}
         />
         <Typography
           variant="button"
-          onClick={() => dispatch(toggleDarkTheme())}
+          onClick={() => {
+            localStorage.setItem("preferDarkMode", JSON.stringify(!darkTheme));
+            dispatch(toggleDarkTheme());
+          }}
         >
           {useAppSelector((state) => state.theme.value) ? "Light" : "Dark"}
         </Typography>
@@ -213,8 +215,14 @@ export default function ThreadAppBar() {
           <SearchBar />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <ThemeSwitch
-              checked={useAppSelector((state) => state.theme.value)}
-              onChange={() => dispatch(toggleDarkTheme())}
+              checked={darkTheme}
+              onClick={() => {
+                localStorage.setItem(
+                  "preferDarkMode",
+                  JSON.stringify(!darkTheme),
+                );
+                dispatch(toggleDarkTheme());
+              }}
             />
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>

@@ -15,6 +15,7 @@ import ThemeSwitch from "../components/ThemeSwitch";
 export default function LandingPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const darkTheme = useAppSelector((state) => state.theme.value);
 
   return (
     <>
@@ -24,8 +25,14 @@ export default function LandingPage() {
             Landing Page
           </Typography>
           <ThemeSwitch
-            checked={useAppSelector((state) => state.theme.value)}
-            onChange={() => dispatch(toggleDarkTheme())}
+            checked={darkTheme}
+            onChange={() => {
+              localStorage.setItem(
+                "preferDarkMode",
+                JSON.stringify(!darkTheme),
+              );
+              dispatch(toggleDarkTheme());
+            }}
           />
         </Toolbar>
       </AppBar>
