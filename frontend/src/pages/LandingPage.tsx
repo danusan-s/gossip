@@ -27,9 +27,6 @@ export default function LandingPage() {
             checked={useAppSelector((state) => state.theme.value)}
             onChange={() => dispatch(toggleDarkTheme())}
           />
-          <Button color="inherit" onClick={() => navigate("/signin")}>
-            Login
-          </Button>
         </Toolbar>
       </AppBar>
 

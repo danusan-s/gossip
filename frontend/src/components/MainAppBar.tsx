@@ -166,6 +166,10 @@ export default function ThreadAppBar() {
           checked={useAppSelector((state) => state.theme.value)}
           sx={{ transform: "translateX(-6px)" }}
           onClick={() => {
+            localStorage.setItem(
+              "preferDarkMode",
+              !useAppSelector((state) => state.theme.value) ? "true" : "false",
+            );
             dispatch(toggleDarkTheme());
           }}
         />
