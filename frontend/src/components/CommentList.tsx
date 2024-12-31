@@ -1,4 +1,4 @@
-import { Typography, Stack } from "@mui/material";
+import { Typography, Stack, Grow } from "@mui/material";
 import CommentSingle from "./CommentSingle";
 
 interface Comment {
@@ -16,18 +16,30 @@ export default function CommentList({
   comments: Comment[];
   handleDeleteComment: CallableFunction;
 }) {
+  const finalList = comments
+    ? comments.map((comment: Comment, index) => {
+        return (
+          <Grow
+            in={true}
+            timeout={(index + 1) * 300}
+            style={{ transformOrigin: "top" }}
+          >
+            <div>
+              <CommentSingle
+                key={comment.id}
+                commentData={comment}
+                handleDeleteComment={handleDeleteComment}
+              />
+            </div>
+          </Grow>
+        );
+      })
+    : null;
+
   return (
     <Stack spacing={2}>
-      {comments ? (
-        comments.map((comment: Comment) => (
-          <CommentSingle
-            key={comment.id}
-            commentData={comment}
-            handleDeleteComment={handleDeleteComment}
-          />
-        ))
-      ) : (
-        <Typography key="0" variant="body1" paddingLeft="2rem">
+      {finalList || (
+        <Typography variant="body1" paddingLeft="2rem">
           No comments
         </Typography>
       )}

@@ -8,8 +8,8 @@ export default function Profile() {
       <Box sx={{ margin: "1rem" }}>
         <Grid container>
           <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
-            <ThreadProfile />
             <CommentProfile />
+            <ThreadProfile />
           </Grid>
         </Grid>
       </Box>

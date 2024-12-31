@@ -35,7 +35,7 @@ export default function CommentThread({ threadId }: { threadId: number }) {
   // Only fetch comments once, otherwise it will cause a lot of unnecessary requests
   useEffect(() => {
     fetchComments();
-  }, []);
+  });
 
   // Fetch again when new comment is added
   const handleNewComment = () => {

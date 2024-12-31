@@ -23,12 +23,7 @@ export default function ThreadList({
   searchQuery?: string | undefined;
 }) {
   const [category, setCategory] = useState<string>("");
-  const [transition, setTransition] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setTransition(true);
-  });
 
   const filterThreads = (threads: Thread[], category: string) => {
     const filteredThreads = threads
@@ -54,7 +49,12 @@ export default function ThreadList({
     visibleThreads.length > 0
       ? visibleThreads.map((value, index) => {
           return (
-            <Grow in={transition} timeout={(index + 1) * 500} key={value.id}>
+            <Grow
+              in={true}
+              timeout={(index + 1) * 300}
+              key={value.id}
+              style={{ transformOrigin: "top" }}
+            >
               <Hoverable onClick={() => navigate(`/thread/${value.id}`)}>
                 <ThreadSingle threadData={value} focused={false} />
               </Hoverable>
