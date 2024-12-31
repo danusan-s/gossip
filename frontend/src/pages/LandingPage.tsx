@@ -4,7 +4,6 @@ import {
   Typography,
   Button,
   Container,
-  Grid2 as Grid,
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -61,19 +60,23 @@ export default function LandingPage() {
         </Container>
       </Box>
 
-      <Grid container spacing={4} marginTop="4rem">
-        <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
-          <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
-            <Typography variant="h5">Test</Typography>
-          </Box>
-          <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
-            <Typography variant="h5">Test</Typography>
-          </Box>
-          <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
-            <Typography variant="h5">Test</Typography>
-          </Box>
-        </Grid>
-      </Grid>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        flexDirection="column"
+        sx={{ marginTop: "4rem" }}
+      >
+        <Box sx={{ marginTop: "2rem" }}>
+          <Typography variant="h5">Frontend built with React + TS</Typography>
+        </Box>
+        <Box sx={{ marginTop: "2rem" }}>
+          <Typography variant="h5">Backend built using Go</Typography>
+        </Box>
+        <Box sx={{ marginTop: "2rem" }}>
+          <Typography variant="h5">Redux for state management</Typography>
+        </Box>
+      </Box>
     </>
   );
 }

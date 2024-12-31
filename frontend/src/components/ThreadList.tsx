@@ -3,7 +3,8 @@ import CategorySelect from "./CategorySelect";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Grow } from "@mui/material";
 
 interface Thread {
   id: number;
@@ -22,30 +23,53 @@ export default function ThreadList({
   searchQuery?: string | undefined;
 }) {
   const [category, setCategory] = useState<string>("");
+  const [transition, setTransition] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  console.log(threads);
+  useEffect(() => {
+    setTransition(true);
+  });
 
-  const list = threads
-    ? threads.map((value) => {
-        if (category && value.category !== category) return null;
-        return (
-          <Hoverable
-            onClick={() => navigate(`/thread/${value.id}`)}
-            key={value.id}
-          >
-            <ThreadSingle threadData={value} focused={false} />
-          </Hoverable>
-        );
-      })
-    : null;
+  const filterThreads = (threads: Thread[], category: string) => {
+    const filteredThreads = threads
+      ? threads.filter((value) => {
+          return !category || value.category === category;
+        })
+      : [];
+    return filteredThreads;
+  };
 
-  const emptyList = !list || list.every((value) => value === null);
+  const [visibleThreads, setVisibleThreads] = useState(threads);
+
+  // Unmount threads and remount to render all transitions again
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    setVisibleThreads([]);
+    setTimeout(() => {
+      setVisibleThreads(filterThreads(threads, newCategory));
+    }, 50);
+  };
+
+  const finalList =
+    visibleThreads.length > 0
+      ? visibleThreads.map((value, index) => {
+          return (
+            <Grow in={transition} timeout={(index + 1) * 500} key={value.id}>
+              <Hoverable onClick={() => navigate(`/thread/${value.id}`)}>
+                <ThreadSingle threadData={value} focused={false} />
+              </Hoverable>
+            </Grow>
+          );
+        })
+      : null;
 
   return (
     <>
       <Box display="flex" justifyContent="center" marginBottom="1rem">
-        <CategorySelect category={category} setCategory={setCategory} />
+        <CategorySelect
+          category={category}
+          setCategory={handleCategoryChange}
+        />
       </Box>
       <Stack spacing={2} alignItems="center">
         {searchQuery && (
@@ -53,12 +77,10 @@ export default function ThreadList({
             Search Results for "{searchQuery}":
           </Typography>
         )}
-        {emptyList ? (
+        {finalList || (
           <Typography variant="h6" gutterBottom>
             No threads found
           </Typography>
-        ) : (
-          list
         )}
       </Stack>
     </>
