@@ -3,7 +3,7 @@ import CategorySelect from "./CategorySelect";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Grow } from "@mui/material";
 
 interface Thread {
@@ -42,7 +42,7 @@ export default function ThreadList({
     setVisibleThreads([]);
     setTimeout(() => {
       setVisibleThreads(filterThreads(threads, newCategory));
-    }, 50);
+    }, 1);
   };
 
   const finalList =
