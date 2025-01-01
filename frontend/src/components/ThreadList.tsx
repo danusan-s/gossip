@@ -1,10 +1,9 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, Grow } from "@mui/material";
 import CategorySelect from "./CategorySelect";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Grow } from "@mui/material";
+import { useEffect, useState } from "react";
 
 interface Thread {
   id: number;
@@ -23,26 +22,31 @@ export default function ThreadList({
   searchQuery?: string | undefined;
 }) {
   const [category, setCategory] = useState<string>("");
+  const [visibleThreads, setVisibleThreads] = useState<Thread[]>([]);
   const navigate = useNavigate();
 
   const filterThreads = (threads: Thread[], category: string) => {
-    const filteredThreads = threads
+    return threads
       ? threads.filter((value) => {
           return !category || value.category === category;
         })
       : [];
-    return filteredThreads;
   };
 
-  const [visibleThreads, setVisibleThreads] = useState(threads);
-
-  // Unmount threads and remount to render all transitions again
-  const handleCategoryChange = (newCategory: string) => {
-    setCategory(newCategory);
+  const reloadThreads = (newCategory: string) => {
     setVisibleThreads([]);
     setTimeout(() => {
       setVisibleThreads(filterThreads(threads, newCategory));
     }, 1);
+  };
+
+  useEffect(() => {
+    reloadThreads(category);
+  }, [threads]);
+
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    reloadThreads(newCategory);
   };
 
   const finalList =
