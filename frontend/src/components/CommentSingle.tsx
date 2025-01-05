@@ -20,7 +20,7 @@ export default function CommentSingle({
   handleDeleteComment,
 }: {
   commentData: Comment;
-  handleDeleteComment: CallableFunction;
+  handleDeleteComment: (id: number) => void;
 }) {
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;

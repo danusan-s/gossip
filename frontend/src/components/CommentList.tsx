@@ -14,7 +14,7 @@ export default function CommentList({
   handleDeleteComment,
 }: {
   comments: Comment[];
-  handleDeleteComment: CallableFunction;
+  handleDeleteComment: (id: number) => void;
 }) {
   const finalList = comments
     ? comments.map((comment: Comment, index) => {

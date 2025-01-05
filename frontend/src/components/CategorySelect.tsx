@@ -37,7 +37,7 @@ export default function CategorySelect({
   setCategory,
 }: {
   category: string;
-  setCategory: CallableFunction;
+  setCategory: (newCategory: string | null) => void;
 }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

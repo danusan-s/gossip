@@ -3,12 +3,12 @@ import axios from "axios";
 import { Box, TextField, Button } from "@mui/material";
 import { useAppSelector } from "../hooks";
 
-export default function Comments({
+export default function CommentCreation({
   threadId,
   handleNewComment,
 }: {
   threadId: number;
-  handleNewComment: CallableFunction;
+  handleNewComment: () => void;
 }) {
   const [formData, setFormData] = useState<string>("");
   const account = useAppSelector((state) => state.account.value);
