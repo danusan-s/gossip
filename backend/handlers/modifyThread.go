@@ -117,7 +117,7 @@ func UpdateThreadHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Received request for UpdateThread")
 
-		if r.Method != http.MethodPost {
+		if r.Method != http.MethodPut {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			log.Println("Method not allowed")
 			return

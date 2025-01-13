@@ -104,7 +104,7 @@ export default function ThreadEdit() {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.post(
+      await axios.put(
         `${apiUrl}/threads/${id}`,
         {
           ...formData,
@@ -117,7 +117,7 @@ export default function ThreadEdit() {
         },
       );
       setFormData({ title: "", description: "", author: "", category: "" });
-      navigate("/thread");
+      navigate(`/thread/${id}`);
     } catch (err) {
       console.error("Error sending data:", err);
       setError("Failed to submit data.");
