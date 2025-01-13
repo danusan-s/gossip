@@ -36,7 +36,7 @@ export default function CategorySelect({
   category,
   setCategory,
 }: {
-  category: string;
+  category: string | null;
   setCategory: (newCategory: string | null) => void;
 }) {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -87,7 +87,7 @@ export default function CategorySelect({
 
   return (
     <StyledToggleButtonGroup
-      value={category === "" ? null : category}
+      value={category}
       exclusive
       onChange={handleCategory}
       aria-label="text alignment"

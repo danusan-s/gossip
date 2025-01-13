@@ -23,10 +23,10 @@ export default function CommentList({
             in={true}
             timeout={(index + 1) * 300}
             style={{ transformOrigin: "top" }}
+            key={comment.id}
           >
             <div>
               <CommentSingle
-                key={comment.id}
                 commentData={comment}
                 handleDeleteComment={handleDeleteComment}
               />

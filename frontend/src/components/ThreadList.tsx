@@ -21,11 +21,11 @@ export default function ThreadList({
   threads: Thread[];
   searchQuery?: string | undefined;
 }) {
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string | null>(null);
   const [visibleThreads, setVisibleThreads] = useState<Thread[]>([]);
   const navigate = useNavigate();
 
-  const filterThreads = (threads: Thread[], category: string) => {
+  const filterThreads = (threads: Thread[], category: string | null) => {
     return threads
       ? threads.filter((value) => {
           return !category || value.category === category;
@@ -33,7 +33,7 @@ export default function ThreadList({
       : [];
   };
 
-  const reloadThreads = (newCategory: string) => {
+  const reloadThreads = (newCategory: string | null) => {
     setVisibleThreads([]);
     setTimeout(() => {
       setVisibleThreads(filterThreads(threads, newCategory));
@@ -44,7 +44,7 @@ export default function ThreadList({
     reloadThreads(category);
   }, [threads]);
 
-  const handleCategoryChange = (newCategory: string) => {
+  const handleCategoryChange = (newCategory: string | null) => {
     setCategory(newCategory);
     reloadThreads(newCategory);
   };

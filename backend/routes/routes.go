@@ -19,6 +19,7 @@ func SetupRoutes(db *sql.DB) *mux.Router {
 	router.HandleFunc("/api/threads", handlers.GetAllThreadsHandler(db)).Methods("GET")
 	router.HandleFunc("/api/threads/search/{searchTerm}", handlers.GetSearchThreadsHandler(db)).Methods("GET")
 	router.Handle("/api/threads", handlers.JWTMiddleware(handlers.CreateThreadHandler(db))).Methods("POST")
+	router.Handle("/api/threads/{id}", handlers.JWTMiddleware(handlers.UpdateThreadHandler(db))).Methods("PUT")
 	router.HandleFunc("/api/threads/{id}", handlers.GetThreadByIDHandler(db)).Methods("GET")
 	router.Handle("/api/threads/{id}", handlers.JWTMiddleware(handlers.DeleteThreadHandler(db))).Methods("DELETE")
 

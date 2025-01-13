@@ -65,6 +65,14 @@ export default function ThreadSingle({
     }
   };
 
+  const handleEdit = async () => {
+    if (account !== threadData.author) {
+      alert("You do not have permission to delete this thread.");
+      return;
+    }
+    navigate(`/thread/edit/${threadData.id}`);
+  };
+
   const handleCopyLink = () => {
     const link = window.location.href; // Get the current page URL
     navigator.clipboard.writeText(link).then(() => {
@@ -93,7 +101,10 @@ export default function ThreadSingle({
     >
       <>
         {account === threadData.author && (
-          <MenuItem onClick={handleDelete}>Delete Thread</MenuItem>
+          <>
+            <MenuItem onClick={handleDelete}>Delete Thread</MenuItem>
+            <MenuItem onClick={handleEdit}>Edit Thread</MenuItem>
+          </>
         )}
         <MenuItem disabled={copied} onClick={handleCopyLink}>
           {copied ? "Link Copied!" : "Copy Link"}
