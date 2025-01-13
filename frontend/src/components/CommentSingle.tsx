@@ -75,7 +75,7 @@ export default function CommentSingle({
       <Box display="flex" justifyContent="space-between" marginTop="0.5rem">
         <ReactionBox id={commentData.id} type={"comments"} />
         {account === commentData.author && (
-          <>
+          <Box>
             <IconButton
               size="large"
               edge="end"
@@ -94,7 +94,7 @@ export default function CommentSingle({
             >
               <DeleteIcon />
             </IconButton>
-          </>
+          </Box>
         )}
       </Box>
     </Item>
