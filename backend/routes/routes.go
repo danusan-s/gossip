@@ -30,6 +30,7 @@ func SetupRoutes(db *sql.DB) *mux.Router {
 
 	router.HandleFunc("/api/threads/{id}/comments", handlers.GetCommentsByThreadHandler(db)).Methods("GET")
 	router.Handle("/api/threads/{id}/comments", handlers.JWTMiddleware(handlers.CreateCommentHandler(db))).Methods("POST")
+	router.Handle("/api/comments/{id}", handlers.JWTMiddleware(handlers.UpdateCommentHandler(db))).Methods("PUT")
 	router.Handle("/api/comments/{id}", handlers.JWTMiddleware(handlers.DeleteCommentHandler(db))).Methods("DELETE")
 
 	router.HandleFunc("/api/comments/{id}/reactions", handlers.GetCommentReaction(db)).Methods("GET")

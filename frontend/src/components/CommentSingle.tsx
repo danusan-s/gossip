@@ -3,9 +3,12 @@ import LocalTimeChip from "./LocalTimeChip";
 import axios from "axios";
 import { Chip, Box, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { useAppSelector } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import ReactionBox from "./Reactions";
+import { useState } from "react";
+import CommentEdit from "./CommentEdit";
 
 interface Comment {
   id: number;
@@ -22,6 +25,7 @@ export default function CommentSingle({
   commentData: Comment;
   handleDeleteComment: (id: number) => void;
 }) {
+  const [editMode, setEditMode] = useState<boolean>(false);
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -52,7 +56,9 @@ export default function CommentSingle({
     }
   };
 
-  return (
+  return editMode ? (
+    <CommentEdit commentData={commentData} setEditMode={setEditMode} />
+  ) : (
     <Item>
       <Box display="flex" justifyContent="space-between">
         <Chip
@@ -69,15 +75,26 @@ export default function CommentSingle({
       <Box display="flex" justifyContent="space-between" marginTop="0.5rem">
         <ReactionBox id={commentData.id} type={"comments"} />
         {account === commentData.author && (
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="delete comment"
-            onClick={() => handleDelete(commentData.id)}
-            color="inherit"
-          >
-            <DeleteIcon />
-          </IconButton>
+          <>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="edit comment"
+              onClick={() => setEditMode(true)}
+              color="inherit"
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="delete comment"
+              onClick={() => handleDelete(commentData.id)}
+              color="inherit"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
         )}
       </Box>
     </Item>

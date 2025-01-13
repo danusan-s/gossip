@@ -178,8 +178,8 @@ func UpdateThreadHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		query := "UPDATE THREADS SET title=?, description=?, author=?, category_id=? WHERE id=?"
-		_, err = db.Exec(query, body.Title, body.Description, body.Author, categoryID, threadID)
+		query := "UPDATE THREADS SET title=?, description=?, category_id=? WHERE id=?"
+		_, err = db.Exec(query, body.Title, body.Description, categoryID, threadID)
 		if err != nil {
 			http.Error(w, "Failed to insert data", http.StatusInternalServerError)
 			log.Println("Error inserting data into database:", err)
