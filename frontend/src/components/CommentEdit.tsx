@@ -26,6 +26,10 @@ export default function CommentEdit({
     setFormData(e.target.value);
   };
 
+  const handleCancel = () => {
+    setEditMode(false);
+  };
+
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (account !== commentData.author) {
@@ -82,9 +86,24 @@ export default function CommentEdit({
         required
         fullWidth
       />
-      <Button type="submit" variant="contained" color="primary">
-        Confirm Edit
-      </Button>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <Button
+          sx={{ width: "100%" }}
+          onClick={handleCancel}
+          variant="contained"
+          color="primary"
+        >
+          Cancel
+        </Button>
+        <Button
+          sx={{ width: "100%" }}
+          type="submit"
+          variant="contained"
+          color="primary"
+        >
+          Confirm
+        </Button>
+      </Box>
     </Box>
   );
 }

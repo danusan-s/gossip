@@ -23,6 +23,7 @@ export default function ThreadList({
 }) {
   const [category, setCategory] = useState<string | null>(null);
   const [visibleThreads, setVisibleThreads] = useState<Thread[]>([]);
+  const [reloading, setReloading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   const filterThreads = (threads: Thread[], category: string | null) => {
@@ -35,8 +36,10 @@ export default function ThreadList({
 
   const reloadThreads = (newCategory: string | null) => {
     setVisibleThreads([]);
+    setReloading(true);
     setTimeout(() => {
       setVisibleThreads(filterThreads(threads, newCategory));
+      setReloading(false);
     }, 1);
   };
 
@@ -81,11 +84,13 @@ export default function ThreadList({
             Search Results for "{searchQuery}":
           </Typography>
         )}
-        {finalList || (
-          <Typography variant="h6" gutterBottom>
-            No threads found
-          </Typography>
-        )}
+
+        {finalList ||
+          (reloading ? null : (
+            <Typography variant="h6" gutterBottom>
+              No threads found
+            </Typography>
+          ))}
       </Stack>
     </>
   );

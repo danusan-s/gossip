@@ -78,6 +78,10 @@ export default function ThreadEdit() {
     }
   };
 
+  const handleCancel = () => {
+    navigate(`/thread/${id}`);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -178,7 +182,6 @@ export default function ThreadEdit() {
                 {error}
               </Typography>
             )}
-
             <Button
               type="submit"
               variant="contained"
@@ -186,6 +189,14 @@ export default function ThreadEdit() {
               sx={{ width: "100%" }}
             >
               Submit
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: "100%" }}
+              onClick={handleCancel}
+            >
+              Cancel
             </Button>
           </Box>
         </Grid>
