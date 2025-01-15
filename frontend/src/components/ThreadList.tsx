@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, Grow } from "@mui/material";
+import { Box, Stack, Typography, Grow, Pagination } from "@mui/material";
 import CategorySelect from "./CategorySelect";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
@@ -22,8 +22,10 @@ export default function ThreadList({
   searchQuery?: string | undefined;
 }) {
   const [category, setCategory] = useState<string | null>(null);
-  const [visibleThreads, setVisibleThreads] = useState<Thread[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [filteredThreads, setFilteredThreads] = useState<Thread[]>([]);
   const [reloading, setReloading] = useState<boolean>(true);
+  const threadPerPage = 5;
   const navigate = useNavigate();
 
   const filterThreads = (threads: Thread[], category: string | null) => {
@@ -35,10 +37,10 @@ export default function ThreadList({
   };
 
   const reloadThreads = (newCategory: string | null) => {
-    setVisibleThreads([]);
+    setFilteredThreads([]);
     setReloading(true);
     setTimeout(() => {
-      setVisibleThreads(filterThreads(threads, newCategory));
+      setFilteredThreads(filterThreads(threads, newCategory));
       setReloading(false);
     }, 1);
   };
@@ -50,15 +52,34 @@ export default function ThreadList({
   const handleCategoryChange = (newCategory: string | null) => {
     setCategory(newCategory);
     reloadThreads(newCategory);
+    setPage(1);
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    event.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    setPage(value);
   };
 
   const finalList =
-    visibleThreads.length > 0
-      ? visibleThreads.map((value, index) => {
+    filteredThreads.length > 0
+      ? filteredThreads.map((value, index) => {
+          if (
+            index < (page - 1) * threadPerPage ||
+            index >= page * threadPerPage
+          ) {
+            return null;
+          }
           return (
             <Grow
               in={true}
-              timeout={(index + 1) * 300}
+              timeout={(index + 1 - (page - 1) * threadPerPage) * 300}
               key={value.id}
               style={{ transformOrigin: "top" }}
             >
@@ -92,6 +113,16 @@ export default function ThreadList({
             </Typography>
           ))}
       </Stack>
+      {finalList ? (
+        <Box display="flex" justifyContent="center" marginTop="1rem">
+          <Pagination
+            count={Math.ceil(filteredThreads.length / threadPerPage)}
+            color="primary"
+            page={page}
+            onChange={handlePageChange}
+          />
+        </Box>
+      ) : null}
     </>
   );
 }
