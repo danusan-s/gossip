@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Box, Grid2 as Grid, Typography } from "@mui/material";
+import { Box, Grid2 as Grid, Popover, Typography } from "@mui/material";
 import Item from "./Item";
 import ThreadSingle from "./ThreadSingle";
 import CommentThread from "./CommentThread";
@@ -54,12 +54,10 @@ export default function Thread() {
     fetchThread();
   }, [threadID]);
 
-  if (loading)
-    return (
-      <Item>
-        <Typography variant="h6">Loading Thread...</Typography>
-      </Item>
-    );
+  if (loading) {
+    console.log("Loading Thread Page");
+    return null;
+  }
   if (error)
     return (
       <Item>
@@ -67,7 +65,10 @@ export default function Thread() {
       </Item>
     );
 
-  if (loading) return <div>Loading Threads...</div>;
+  if (loading) {
+    console.log("Loading Thread");
+    return null;
+  }
   if (error) return <div>Error: {error}</div>;
 
   return (

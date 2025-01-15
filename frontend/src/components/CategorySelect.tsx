@@ -68,7 +68,10 @@ export default function CategorySelect({
     fetchCategories();
   }, []);
 
-  if (loading) return <div>Loading Categories...</div>;
+  if (loading) {
+    console.log("Loading Categories");
+    return null;
+  }
   if (error) return <div>Error: {error}</div>;
 
   const list = categories

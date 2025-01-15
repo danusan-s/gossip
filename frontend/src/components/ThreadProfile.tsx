@@ -40,7 +40,10 @@ export default function ThreadProfile() {
     fetchThreads();
   }, [userName]);
 
-  if (loading) return <div>Loading Threads...</div>;
+  if (loading) {
+    console.log("Loading Threads");
+    return null;
+  }
   if (error) return <div>Error: {error}</div>;
 
   return (

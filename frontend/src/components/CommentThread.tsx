@@ -46,7 +46,10 @@ export default function CommentThread({ threadId }: { threadId: number }) {
     setComments(comments.filter((comment) => comment.id !== id));
   };
 
-  if (loading) return <div>Loading comments...</div>;
+  if (loading) {
+    console.log("Loading Comments");
+    return null;
+  }
   if (error) return <div>Error: {error}</div>;
 
   return (

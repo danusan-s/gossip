@@ -51,7 +51,10 @@ export default function ForumPage() {
     }
   }, []);
 
-  if (loading) return <div>Loading User...</div>;
+  if (loading) {
+    console.log("Loading Forum Page");
+    return null;
+  }
 
   return (
     <>
