@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Box, Grid2 as Grid, Popover, Typography } from "@mui/material";
+import { Box, Grid2 as Grid, Typography } from "@mui/material";
 import Item from "./Item";
 import ThreadSingle from "./ThreadSingle";
 import CommentThread from "./CommentThread";
