@@ -99,7 +99,12 @@ func GetSearchThreadsHandler(db *sql.DB) http.HandlerFunc {
 		search := vars["searchTerm"]
 		log.Printf("Search Term: %s", search)
 
-		rows, err := db.Query("SELECT id, title, description, author, category_id, created_at FROM THREADS WHERE title LIKE ?", "%"+search+"%")
+		rows, err := db.Query(`
+    SELECT id, title, description, author, category_id, created_at
+    FROM THREADS
+    WHERE LOWER(title) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)`,
+			"%"+search+"%", "%"+search+"%")
+
 		if err != nil {
 			http.Error(w, "Failed to query database", http.StatusInternalServerError)
 			log.Println("Error querying database:", err)
