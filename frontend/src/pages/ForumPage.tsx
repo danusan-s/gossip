@@ -11,7 +11,14 @@ import { useAppDispatch } from "../hooks";
 import { useEffect, useState } from "react";
 import { setAccount, unsetAccount } from "../slices/account";
 
-export default function ForumPage() {
+/**
+ * The ForumPage component manages the routing for the forum application.
+ * It renders the main app bar and routes to the appropriate components.
+ *
+ * @returns {JSX.Element} The ForumPage component
+ */
+
+export default function ForumPage(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 

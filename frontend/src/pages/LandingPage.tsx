@@ -11,7 +11,13 @@ import { useAppSelector, useAppDispatch } from "../hooks";
 import { toggleDarkTheme } from "../slices/theme";
 import ThemeSwitch from "../components/ThemeSwitch";
 
-export default function LandingPage() {
+/**
+ * The LandingPage component is the landing page for the application.
+ * It displays a welcome message and a button to navigate to the threads page.
+ *
+ * @returns {JSX.Element} The LandingPage component
+ */
+export default function LandingPage(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const darkTheme = useAppSelector((state) => state.theme.value);
