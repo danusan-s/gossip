@@ -1,13 +1,14 @@
-import Item from "./Item";
-import LocalTimeChip from "./LocalTimeChip";
 import axios from "axios";
+import { useAppSelector } from "../hooks";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 import { Chip, Box, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { useAppSelector } from "../hooks";
-import { useNavigate } from "react-router-dom";
+import Item from "./Item";
+import LocalTimeChip from "./LocalTimeChip";
 import ReactionBox from "./Reactions";
-import { useState } from "react";
 import CommentEdit from "./CommentEdit";
 
 interface Comment {
@@ -18,13 +19,21 @@ interface Comment {
   time: string;
 }
 
+/**
+ * The CommentSingle component displays a single comment with its content, author, reactions and time.
+ * It also displays the edit and delete options if the comment belongs to the current user.
+ *
+ * @prop {Comment} commentData The comment data to display
+ * @prop {function} handleDeleteComment The function to call when the comment is deleted
+ * @returns {JSX.Element} The CommentSingle component
+ */
 export default function CommentSingle({
   commentData,
   handleDeleteComment,
 }: {
   commentData: Comment;
   handleDeleteComment: (id: number) => void;
-}) {
+}): JSX.Element {
   const [editMode, setEditMode] = useState<boolean>(false);
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;

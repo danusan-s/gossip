@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 import { Box, Typography } from "@mui/material";
 import CommentCreation from "./CommentCreation";
 import CommentList from "./CommentList";
@@ -12,7 +13,17 @@ interface Comment {
   time: string;
 }
 
-export default function CommentThread({ threadId }: { threadId: number }) {
+/**
+ * The CommentThread component displays a list of comments for a specific thread.
+ *
+ * @prop {number} threadId The ID of the thread
+ * @returns {JSX.Element} The CommentThread component
+ */
+export default function CommentThread({
+  threadId,
+}: {
+  threadId: number;
+}): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

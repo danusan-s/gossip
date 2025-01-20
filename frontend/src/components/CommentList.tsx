@@ -9,13 +9,20 @@ interface Comment {
   time: string;
 }
 
+/**
+ * The CommentList component displays a list of comments.
+ *
+ * @prop {Comment[]} comments The list of comments to display
+ * @prop {function} handleDeleteComment The function to call when a comment is deleted
+ * @returns {JSX.Element} The CommentList component
+ */
 export default function CommentList({
   comments,
   handleDeleteComment,
 }: {
   comments: Comment[];
   handleDeleteComment: (id: number) => void;
-}) {
+}): JSX.Element {
   const finalList = comments
     ? comments.map((comment: Comment, index) => {
         return (

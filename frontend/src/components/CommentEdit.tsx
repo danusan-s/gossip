@@ -1,7 +1,8 @@
-import { useState } from "react";
 import axios from "axios";
-import { Box, TextField, Button } from "@mui/material";
+import { useState } from "react";
 import { useAppSelector } from "../hooks";
+
+import { Box, TextField, Button } from "@mui/material";
 
 interface Comment {
   id: number;
@@ -11,13 +12,22 @@ interface Comment {
   time: string;
 }
 
+/**
+ * The CommentEdit component allows the user to edit a comment.
+ * It displays a form with a field for the comment content.
+ * The user can submit the form to update the comment.
+ *
+ * @prop {Comment} commentData The comment data to edit
+ * @prop {(editMode:boolean)=>void} setEditMode The function to call to modify the edit mode
+ * @returns {JSX.Element} The CommentEdit component
+ */
 export default function CommentEdit({
   commentData,
   setEditMode,
 }: {
   commentData: Comment;
   setEditMode: (editMode: boolean) => void;
-}) {
+}): JSX.Element {
   const [formData, setFormData] = useState<string>(commentData.content);
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;

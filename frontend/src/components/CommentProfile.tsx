@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+
 import { Box, Typography } from "@mui/material";
 import CommentList from "./CommentList";
-import { useParams } from "react-router-dom";
 
 interface Comment {
   id: number;
@@ -12,7 +13,12 @@ interface Comment {
   time: string;
 }
 
-export default function CommentProfile() {
+/**
+ * The CommentProfile component displays a list of comments made by a specific user.
+ *
+ * @returns {JSX.Element} The CommentProfile component
+ */
+export default function CommentProfile(): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

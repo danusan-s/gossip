@@ -1,15 +1,25 @@
-import { useState } from "react";
 import axios from "axios";
-import { Box, TextField, Button } from "@mui/material";
+import { useState } from "react";
 import { useAppSelector } from "../hooks";
 
+import { Box, TextField, Button } from "@mui/material";
+
+/**
+ * The CommentCreation component allows the user to create a new comment.
+ * It displays a form with a field for the comment content.
+ * The user can submit the form to create a new comment.
+ *
+ * @prop {number} threadId The ID of the thread to create the comment for
+ * @prop {()=>void} handleNewComment The function to call to refresh the comments
+ * @returns {JSX.Element} The CommentCreation component
+ */
 export default function CommentCreation({
   threadId,
   handleNewComment,
 }: {
   threadId: number;
   handleNewComment: () => void;
-}) {
+}): JSX.Element {
   const [formData, setFormData] = useState<string>("");
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;
