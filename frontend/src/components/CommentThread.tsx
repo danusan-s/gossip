@@ -17,13 +17,13 @@ interface Comment {
  * The CommentThread component displays a list of comments for a specific thread.
  *
  * @prop {number} threadId The ID of the thread
- * @returns {JSX.Element} The CommentThread component
+ * @returns {JSX.Element | null} The CommentThread component
  */
 export default function CommentThread({
   threadId,
 }: {
   threadId: number;
-}): JSX.Element {
+}): JSX.Element | null {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

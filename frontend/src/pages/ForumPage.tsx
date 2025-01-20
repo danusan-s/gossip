@@ -15,10 +15,10 @@ import { setAccount, unsetAccount } from "../slices/account";
  * The ForumPage component manages the routing for the forum application.
  * It renders the main app bar and routes to the appropriate components.
  *
- * @returns {JSX.Element} The ForumPage component
+ * @returns {JSX.Element | null} The ForumPage component
  */
 
-export default function ForumPage(): JSX.Element {
+export default function ForumPage(): JSX.Element | null {
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 

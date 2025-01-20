@@ -17,9 +17,9 @@ interface Thread {
 /**
  * The ThreadProfile component displays a list of threads created by a specific user.
  *
- * @returns {JSX.Element} The ThreadProfile component
+ * @returns {JSX.Element | null} The ThreadProfile component
  */
-export default function ThreadProfile(): JSX.Element {
+export default function ThreadProfile(): JSX.Element | null {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

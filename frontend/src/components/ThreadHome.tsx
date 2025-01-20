@@ -18,9 +18,9 @@ interface Thread {
  * The ThreadHome component displays a list of threads.
  * It allows filtering by search query.
  *
- * @returns {JSX.Element} The ThreadHome component
+ * @returns {JSX.Element | null} The ThreadHome component
  */
-export default function ThreadHome(): JSX.Element {
+export default function ThreadHome(): JSX.Element | null {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

@@ -38,7 +38,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
  *
  * @prop {string | null} category The currently selected category
  * @prop {function} setCategory The function to call when a category is selected
- * @returns {JSX.Element} The CategorySelect component
+ * @returns {JSX.Element | null} The CategorySelect component
  */
 export default function CategorySelect({
   category,
@@ -46,7 +46,7 @@ export default function CategorySelect({
 }: {
   category: string | null;
   setCategory: (newCategory: string | null) => void;
-}): JSX.Element {
+}): JSX.Element | null {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
