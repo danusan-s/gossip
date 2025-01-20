@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+
+import { Box, Grid2 as Grid, Typography } from "@mui/material";
 import ThreadList from "./ThreadList";
-import { Box, Grid2 as Grid } from "@mui/material";
 
 interface Thread {
   id: number;
@@ -13,7 +14,13 @@ interface Thread {
   time: string;
 }
 
-export default function ThreadHome() {
+/**
+ * The ThreadHome component displays a list of threads.
+ * It allows filtering by search query.
+ *
+ * @returns {JSX.Element} The ThreadHome component
+ */
+export default function ThreadHome(): JSX.Element {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +61,12 @@ export default function ThreadHome() {
     <Box sx={{ margin: "1rem" }}>
       <Grid container>
         <Grid size={{ xs: 12, md: 8 }} offset={{ xs: 0, md: 2 }}>
-          <ThreadList threads={threads} searchQuery={searchQuery} />
+          {searchQuery && (
+            <Typography variant="h5" gutterBottom>
+              Search Results for "{searchQuery}":
+            </Typography>
+          )}
+          <ThreadList threads={threads} />
         </Grid>
       </Grid>
     </Box>

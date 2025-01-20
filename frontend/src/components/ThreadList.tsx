@@ -1,9 +1,10 @@
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import { Box, Stack, Typography, Grow, Pagination } from "@mui/material";
 import CategorySelect from "./CategorySelect";
 import ThreadSingle from "./ThreadSingle";
 import Hoverable from "./Hoverable";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 interface Thread {
   id: number;
@@ -14,13 +15,18 @@ interface Thread {
   time: string;
 }
 
+/**
+ * The ThreadList component displays a list of threads.
+ * It allows filtering by category and pagination.
+ *
+ * @prop {Thread[]} threads The list of threads filtered by search query
+ * @returns {JSX.Element} The ThreadList component
+ */
 export default function ThreadList({
   threads,
-  searchQuery = undefined,
 }: {
   threads: Thread[];
-  searchQuery?: string | undefined;
-}) {
+}): JSX.Element {
   const [category, setCategory] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [filteredThreads, setFilteredThreads] = useState<Thread[]>([]);
@@ -100,12 +106,6 @@ export default function ThreadList({
         />
       </Box>
       <Stack spacing={2} alignItems="center">
-        {searchQuery && (
-          <Typography variant="h5" gutterBottom>
-            Search Results for "{searchQuery}":
-          </Typography>
-        )}
-
         {finalList ||
           (reloading ? null : (
             <Typography variant="h6" gutterBottom>

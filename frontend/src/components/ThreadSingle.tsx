@@ -1,9 +1,16 @@
-import { Box, Chip, IconButton, Typography } from "@mui/material";
-import { useState } from "react";
-import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../hooks";
+
+import {
+  Box,
+  Chip,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import MoreIcon from "@mui/icons-material/MoreHoriz";
 import LocalTimeChip from "./LocalTimeChip";
 import ReactionBox from "./Reactions";
@@ -17,13 +24,26 @@ interface Thread {
   time: string;
 }
 
+/**
+ * The ThreadSingle component displays a single thread with its title, description, author, reactions and category.
+ * It also displays the time of the thread creation.
+ *
+ * If the thread is focused, it displays the full title and description along with more options:
+ * - Copy Link
+ * - Delete Thread if it belongs to the current user
+ * - Edit Thread if it belongs to the current user
+ *
+ * @prop {Thread} threadData The thread data to display
+ * @prop {boolean} focused Whether the thread is main focus and not part of a list. focused is optional and defaults to true
+ * @returns {JSX.Element} The ThreadSingle component
+ */
 export default function ThreadSingle({
   threadData,
   focused = true,
 }: {
   threadData: Thread;
   focused?: boolean;
-}) {
+}): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [copied, setCopied] = useState<boolean>(false);
   const navigate = useNavigate();

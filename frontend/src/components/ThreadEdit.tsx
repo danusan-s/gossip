@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppSelector } from "../hooks";
+
 import {
   TextField,
   Button,
@@ -7,8 +10,6 @@ import {
   Typography,
   Grid2 as Grid,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../hooks";
 import CategorySelect from "./CategorySelect";
 
 interface FormData {
@@ -18,7 +19,14 @@ interface FormData {
   category: string;
 }
 
-export default function ThreadEdit() {
+/**
+ * The ThreadEdit component allows the user to edit a thread.
+ * It displays a form with fields for title, description, and category.
+ * The user can submit the form to update the thread.
+ *
+ * @returns {JSX.Element} The ThreadEdit component
+ */
+export default function ThreadEdit(): JSX.Element {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",

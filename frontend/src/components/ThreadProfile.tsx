@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ThreadList from "./ThreadList";
+
 import { Typography } from "@mui/material";
+import ThreadList from "./ThreadList";
 
 interface Thread {
   id: number;
@@ -13,7 +14,12 @@ interface Thread {
   time: string;
 }
 
-export default function ThreadProfile() {
+/**
+ * The ThreadProfile component displays a list of threads created by a specific user.
+ *
+ * @returns {JSX.Element} The ThreadProfile component
+ */
+export default function ThreadProfile(): JSX.Element {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

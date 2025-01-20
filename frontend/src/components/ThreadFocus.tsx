@@ -16,7 +16,12 @@ interface Thread {
   time: string;
 }
 
-export default function Thread() {
+/**
+ * The ThreadFocus component displays a single thread and its corresponding comments.
+ *
+ * @returns {JSX.Element} The ThreadFocus component
+ */
+export default function ThreadFocus(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

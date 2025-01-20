@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../hooks";
+
 import {
   TextField,
   Button,
@@ -7,8 +10,6 @@ import {
   Typography,
   Grid2 as Grid,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../hooks";
 import CategorySelect from "./CategorySelect";
 
 interface FormData {
@@ -17,7 +18,14 @@ interface FormData {
   category: string;
 }
 
-export default function ThreadCreation() {
+/**
+ * The ThreadCreation component allows the user to create a new thread.
+ * It displays a form with fields for title, description, and category.
+ * The user can submit the form to create a new thread.
+ *
+ * @returns {JSX.Element} The ThreadCreation component
+ */
+export default function ThreadCreation(): JSX.Element {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
