@@ -1,6 +1,12 @@
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 
+/**
+ * The ThemeSwitch component is a styled slider switch for toggling between light and dark themes.
+ * This design is inspired by the Material-UI documentation.
+ *
+ * @returns {JSX.Element} The ThemeSwitch component
+ */
 const ThemeSwitch = styled(Switch)(({ theme }) => ({
   width: 62,
   height: 34,

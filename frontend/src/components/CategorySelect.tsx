@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
@@ -32,13 +33,20 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
+/**
+ * A mutually exclusive toggle button group for selecting category
+ *
+ * @prop {string | null} category The currently selected category
+ * @prop {function} setCategory The function to call when a category is selected
+ * @returns {JSX.Element} The CategorySelect component
+ */
 export default function CategorySelect({
   category,
   setCategory,
 }: {
   category: string | null;
   setCategory: (newCategory: string | null) => void;
-}) {
+}): JSX.Element {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

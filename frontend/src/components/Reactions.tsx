@@ -1,22 +1,30 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppSelector } from "../hooks";
+
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ThumbUpOutlineIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlineIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import Typography from "@mui/material/Typography";
 
+/**
+ * The ReactionBox component displays the like and dislike reactions for a post.
+ * It allows the user to react to a post with a like or dislike.
+ *
+ * @prop {number} id The ID of the thread/comment to react to
+ * @prop {string} type "threads" for thread and "comments" for comment
+ * @returns {JSX.Element} The ReactionBox component
+ */
 export default function ReactionBox({
   id,
   type,
 }: {
   id: number;
   type: string;
-}) {
+}): JSX.Element {
   const [reaction, setReaction] = useState<string | null>(null);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [dislikeCount, setDislikeCount] = useState<number>(0);

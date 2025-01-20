@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks";
 import { setAccount } from "../slices/account";
 
-export default function SignIn() {
+import { TextField, Button, Box, Typography } from "@mui/material";
+
+/**
+ * The SignIn component allows the user to sign in to their account.
+ * It displays a form with fields for username and password.
+ * The user can submit the form to sign in.
+ *
+ * @returns {JSX.Element} The SignIn component
+ */
+export default function SignIn(): JSX.Element {
   const [formData, setFormData] = useState({
     username: "",
     password: "",

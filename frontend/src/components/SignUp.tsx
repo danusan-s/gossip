@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export default function SignUp() {
+import { TextField, Button, Box, Typography } from "@mui/material";
+
+/**
+ * The SignUp component allows the user to sign up for an account.
+ * It displays a form with fields for username, email, and password.
+ * The user can submit the form to create a new account.
+ *
+ * @returns {JSX.Element} The SignUp component
+ */
+export default function SignUp(): JSX.Element {
   const [formData, setFormData] = useState({
     username: "",
     email: "",

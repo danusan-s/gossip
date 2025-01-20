@@ -1,9 +1,12 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import { useState } from "react";
 import { Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+
+// Similar style to mui documentation but modified to work with smaller screens and be cover more of the app bar.
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -41,7 +44,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchBar() {
+/**
+ * The SearchBar component allows the user to search for threads.
+ * It displays a search bar where the user can enter a search query.
+ * The user can submit the form to search for threads.
+ *
+ * @returns {JSX.Element} The SearchBar component
+ */
+export default function SearchBar(): JSX.Element {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 

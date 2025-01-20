@@ -28,7 +28,13 @@ import {
 import ThemeSwitch from "./ThemeSwitch";
 import SearchBar from "./SearchBar";
 
-export default function ThreadAppBar() {
+/**
+ * The ThreadAppBar component is the app bar for the thread page.
+ * It displays the app title, search bar, create new post button, account menu, and theme switch.
+ *
+ * @returns {JSX.Element} The ThreadAppBar component
+ */
+export default function ThreadAppBar(): JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);

@@ -1,6 +1,7 @@
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+// Custom sytled component for list items.
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   width: "100%",
