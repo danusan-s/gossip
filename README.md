@@ -1,5 +1,7 @@
 # CVWO Assignment
 
+![Logo](frontend/public/logo.png)
+
 A simple website that allows users to create, read and delete forums.
 This website was built with React, Redux and TypeScript for the frontend and Go for the backend.
 It uses a MySQL database to store the forums and all other relevant data.
