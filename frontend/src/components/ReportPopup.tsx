@@ -65,6 +65,7 @@ export default function ReportPopup({
         },
       );
       setFormData("");
+      handleClose();
     } catch (err) {
       console.error("Error sending data:", err);
       alert("Failed to submit data.");
