@@ -31,6 +31,25 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		// Validate the Request
+		if req.Username == "" || req.Email == "" || req.Password == "" {
+			log.Println("Invalid request: Missing fields")
+			http.Error(w, "Missing fields", http.StatusBadRequest)
+			return
+		}
+
+		if err := utils.ValidateUsername(req.Username); err != nil {
+			log.Printf("Invalid request: Username=%s: %v\n", req.Username, err)
+			http.Error(w, "Invalid username", http.StatusBadRequest)
+			return
+		}
+
+		if err := utils.ValidatePassword(req.Password); err != nil {
+			log.Printf("Invalid request: %v\n", err)
+			http.Error(w, "Invalid password", http.StatusBadRequest)
+			return
+		}
+
 		log.Printf("Decoded request: Username=%s, Email=%s\n", req.Username, req.Email)
 
 		// Hash the password
