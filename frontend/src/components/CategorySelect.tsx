@@ -101,7 +101,7 @@ export default function CategorySelect({
       value={category}
       exclusive
       onChange={handleCategory}
-      aria-label="text alignment"
+      aria-label="category select"
     >
       {list}
     </StyledToggleButtonGroup>

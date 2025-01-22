@@ -51,11 +51,11 @@ export default function ThreadCreation(): JSX.Element {
     }));
   };
 
-  const handleCategory = (newAlignment: string | null) => {
-    if (newAlignment !== null) {
+  const handleCategory = (newCategory: string | null) => {
+    if (newCategory !== null) {
       setFormData((prev) => ({
         ...prev,
-        category: newAlignment,
+        category: newCategory,
       }));
     }
   };
