@@ -8,8 +8,8 @@ import (
 )
 
 type ReportCreate struct {
+	ID     int    `json:"id"`
 	Type   string `json:"type"`
-	ID     string `json:"id"`
 	Reason string `json:"reason"`
 }
 
@@ -45,9 +45,9 @@ func CreateReportHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		if body.ID == "" || body.Reason == "" {
-			http.Error(w, "ID and Reason are required", http.StatusBadRequest)
-			log.Println("ID or Reason is missing")
+		if body.Reason == "" {
+			http.Error(w, "Reason is required", http.StatusBadRequest)
+			log.Println("Reason is missing")
 			return
 		}
 
