@@ -38,9 +38,10 @@ export default function SignUp(): JSX.Element {
     try {
       await axios.post(`${apiUrl}/register`, formData);
       navigate("/signin");
+      setError(null);
     } catch (err: any) {
       if (err.response) {
-        setError(err.response.data.message);
+        setError(err.response.data);
       } else {
         setError("An error occurred. Please try again later.");
       }
