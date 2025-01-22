@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import { TextField, Button, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Grid2 as Grid,
+} from "@mui/material";
 
 interface SignUpFormData {
   username: string;
@@ -49,76 +55,74 @@ export default function SignUp(): JSX.Element {
   };
 
   return (
-    <Box
+    <Grid
+      container
       sx={{
-        display: "flex",
+        height: "90vh",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
       }}
     >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          maxWidth: 400,
-          margin: "0 auto",
-          padding: 2,
-          border: "1px solid #ccc",
-          borderRadius: 2,
-          boxShadow: 2,
-          transform: "translateY(-10%)",
-        }}
-      >
-        <Typography variant="h5" textAlign="center">
-          Sign Up
-        </Typography>
-
-        <TextField
-          label="Username"
-          name="username"
-          onChange={handleChange}
-          value={formData.username}
-          placeholder="Enter your username"
-          required
-          fullWidth
-        />
-
-        <TextField
-          label="Email"
-          name="email"
-          type="email"
-          onChange={handleChange}
-          value={formData.email}
-          placeholder="Enter your email"
-          required
-          fullWidth
-        />
-
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          onChange={handleChange}
-          value={formData.password}
-          placeholder="Enter your password"
-          required
-          fullWidth
-        />
-
-        <Box>
-          <Typography variant="body2" color="error">
-            {error}
+      <Grid size={{ xs: 12, sm: 8, md: 4 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            width: "100%",
+            padding: 2,
+            boxShadow: 2,
+          }}
+        >
+          <Typography variant="h5" textAlign="center" gutterBottom>
+            Sign Up
           </Typography>
-        </Box>
 
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Register
-        </Button>
-      </Box>
-    </Box>
+          <TextField
+            label="Username"
+            name="username"
+            onChange={handleChange}
+            value={formData.username}
+            placeholder="Enter your username"
+            required
+            fullWidth
+          />
+
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            onChange={handleChange}
+            value={formData.email}
+            placeholder="Enter your email"
+            required
+            fullWidth
+          />
+
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            onChange={handleChange}
+            value={formData.password}
+            placeholder="Enter your password"
+            required
+            fullWidth
+          />
+
+          <Box>
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
+          </Box>
+
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Register
+          </Button>
+        </Box>
+      </Grid>
+    </Grid>
   );
 }
