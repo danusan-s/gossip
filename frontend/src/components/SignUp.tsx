@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import { TextField, Button, Box, Typography } from "@mui/material";
 
+interface SignUpFormData {
+  username: string;
+  email: string;
+  password: string;
+}
+
 /**
  * The SignUp component allows the user to sign up for an account.
  * It displays a form with fields for username, email, and password.
@@ -12,11 +18,13 @@ import { TextField, Button, Box, Typography } from "@mui/material";
  * @returns {JSX.Element} The SignUp component
  */
 export default function SignUp(): JSX.Element {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignUpFormData>({
     username: "",
     email: "",
     password: "",
   });
+
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -30,8 +38,12 @@ export default function SignUp(): JSX.Element {
     try {
       await axios.post(`${apiUrl}/register`, formData);
       navigate("/signin");
-    } catch (err) {
-      alert("Error registering user.");
+    } catch (err: any) {
+      if (err.response) {
+        setError(err.response.data.message);
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
     }
   };
 
@@ -95,6 +107,12 @@ export default function SignUp(): JSX.Element {
           required
           fullWidth
         />
+
+        <Box>
+          <Typography variant="body2" color="error">
+            {error}
+          </Typography>
+        </Box>
 
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Register

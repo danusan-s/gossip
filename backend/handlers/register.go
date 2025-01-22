@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"web-forum/utils"
@@ -40,13 +41,13 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 
 		if err := utils.ValidateUsername(req.Username); err != nil {
 			log.Printf("Invalid request: Username=%s: %v\n", req.Username, err)
-			http.Error(w, "Invalid username", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		if err := utils.ValidatePassword(req.Password); err != nil {
 			log.Printf("Invalid request: %v\n", err)
-			http.Error(w, "Invalid password", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
