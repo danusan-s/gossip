@@ -53,6 +53,7 @@ func CreateTables(db *sql.DB) error {
     state TINYINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, thread_id),
+    FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE,
     FOREIGN KEY (thread_id) REFERENCES THREADS(id) ON DELETE CASCADE
 );`
 
@@ -63,6 +64,7 @@ func CreateTables(db *sql.DB) error {
     state TINYINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, comment_id),
+    FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE,
     FOREIGN KEY (comment_id) REFERENCES COMMENTS(id) ON DELETE CASCADE
 );`
 
