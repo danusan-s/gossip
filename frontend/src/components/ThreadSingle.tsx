@@ -14,6 +14,7 @@ import {
 import MoreIcon from "@mui/icons-material/MoreHoriz";
 import LocalTimeChip from "./LocalTimeChip";
 import ReactionBox from "./Reactions";
+import ReportPopup from "./ReportPopup";
 
 interface Thread {
   id: number;
@@ -46,6 +47,7 @@ export default function ThreadSingle({
 }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [copied, setCopied] = useState<boolean>(false);
+  const [reporting, setReporting] = useState<boolean>(false);
   const navigate = useNavigate();
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -126,9 +128,12 @@ export default function ThreadSingle({
             <MenuItem onClick={handleEdit}>Edit Thread</MenuItem>
           </>
         )}
-        <MenuItem disabled={copied} onClick={handleCopyLink}>
-          {copied ? "Link Copied!" : "Copy Link"}
-        </MenuItem>
+        <>
+          <MenuItem disabled={copied} onClick={handleCopyLink}>
+            {copied ? "Link Copied!" : "Copy Link"}
+          </MenuItem>
+          <MenuItem onClick={() => setReporting(true)}>Report Thread</MenuItem>
+        </>
       </>
     </Menu>
   );
@@ -199,6 +204,13 @@ export default function ThreadSingle({
           )}
         </Box>
       </Box>
+      <ReportPopup
+        open={reporting}
+        setOpen={setReporting}
+        type={"thread"}
+        id={threadData.id}
+        author={threadData.author}
+      />
       {renderMenu}
     </>
   );

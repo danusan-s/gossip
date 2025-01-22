@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Typography } from "@mui/material";
+import { Typography, CircularProgress } from "@mui/material";
 import ThreadList from "./ThreadList";
 
 interface Thread {
@@ -48,7 +48,7 @@ export default function ThreadProfile(): JSX.Element | null {
 
   if (loading) {
     console.log("Loading Threads");
-    return null;
+    return <CircularProgress color="inherit" />;
   }
   if (error) return <div>Error: {error}</div>;
 

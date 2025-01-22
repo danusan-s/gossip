@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import CommentCreation from "./CommentCreation";
 import CommentList from "./CommentList";
 
@@ -59,7 +59,7 @@ export default function CommentThread({
 
   if (loading) {
     console.log("Loading Comments");
-    return null;
+    return <CircularProgress color="inherit" />;
   }
   if (error) return <div>Error: {error}</div>;
 

@@ -43,5 +43,7 @@ func SetupRoutes(db *sql.DB) *mux.Router {
 
 	router.HandleFunc("/api/categories", handlers.GetAllCategoriesHandler(db)).Methods("GET")
 
+	router.Handle("/api/report", handlers.JWTMiddleware(handlers.CreateReportHandler(db))).Methods("POST")
+
 	return router
 }

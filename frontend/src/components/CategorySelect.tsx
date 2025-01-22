@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import ToggleButton from "@mui/material/ToggleButton";
+import { ToggleButton, CircularProgress } from "@mui/material";
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup";
@@ -78,7 +78,7 @@ export default function CategorySelect({
 
   if (loading) {
     console.log("Loading Categories");
-    return null;
+    return <CircularProgress color="inherit" />;
   }
   if (error) return <div>Error: {error}</div>;
 

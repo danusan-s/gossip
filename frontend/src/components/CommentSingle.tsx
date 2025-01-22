@@ -6,10 +6,12 @@ import { useState } from "react";
 import { Chip, Box, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import FlagIcon from "@mui/icons-material/Flag";
 import Item from "./Item";
 import LocalTimeChip from "./LocalTimeChip";
 import ReactionBox from "./Reactions";
 import CommentEdit from "./CommentEdit";
+import ReportPopup from "./ReportPopup";
 
 interface Comment {
   id: number;
@@ -35,6 +37,7 @@ export default function CommentSingle({
   handleDeleteComment: (id: number) => void;
 }): JSX.Element {
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [reporting, setReporting] = useState<boolean>(false);
   const account = useAppSelector((state) => state.account.value);
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -83,29 +86,47 @@ export default function CommentSingle({
       </Typography>
       <Box display="flex" justifyContent="space-between" marginTop="0.5rem">
         <ReactionBox id={commentData.id} type={"comments"} />
-        {account === commentData.author && (
-          <Box>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="edit comment"
-              onClick={() => setEditMode(true)}
-              color="inherit"
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="delete comment"
-              onClick={() => handleDelete(commentData.id)}
-              color="inherit"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        )}
+        <Box>
+          {account === commentData.author && (
+            <>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="edit comment"
+                onClick={() => setEditMode(true)}
+                color="inherit"
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="delete comment"
+                onClick={() => handleDelete(commentData.id)}
+                color="inherit"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </>
+          )}
+          <IconButton
+            size="large"
+            edge="end"
+            aria-label="report comment"
+            onClick={() => setReporting(true)}
+            color="inherit"
+          >
+            <FlagIcon />
+          </IconButton>
+        </Box>
       </Box>
+      <ReportPopup
+        open={reporting}
+        setOpen={setReporting}
+        type={"comment"}
+        id={commentData.id}
+        author={commentData.author}
+      />
     </Item>
   );
 }

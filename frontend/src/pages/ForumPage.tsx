@@ -1,3 +1,4 @@
+import CircularProgress from "@mui/material/CircularProgress";
 import MainAppBar from "../components/MainAppBar";
 import ThreadHome from "../components/ThreadHome";
 import ThreadCreation from "../components/ThreadCreation";
@@ -60,7 +61,7 @@ export default function ForumPage(): JSX.Element | null {
 
   if (loading) {
     console.log("Loading Forum Page");
-    return null;
+    return <CircularProgress color="inherit" />;
   }
 
   return (

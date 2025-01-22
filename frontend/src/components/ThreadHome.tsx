@@ -2,7 +2,12 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Box, Grid2 as Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Grid2 as Grid,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import ThreadList from "./ThreadList";
 
 interface Thread {
@@ -53,7 +58,7 @@ export default function ThreadHome(): JSX.Element | null {
 
   if (loading) {
     console.log("Loading Threads");
-    return null;
+    return <CircularProgress color="inherit" />;
   }
   if (error) return <div>Error: {error}</div>;
 

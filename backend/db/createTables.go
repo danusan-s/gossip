@@ -66,6 +66,16 @@ func CreateTables(db *sql.DB) error {
     FOREIGN KEY (comment_id) REFERENCES COMMENTS(id) ON DELETE CASCADE
 );`
 
+	createReportsTableSQL := `
+  CREATE TABLE IF NOT EXISTS REPORTS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reported_id INT NOT NULL,
+    reporter_id VARCHAR(255) NOT NULL,
+    reported_type VARCHAR(255) NOT NULL,
+    reason TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );`
+
 	_, err := db.Exec(createCategoriesTableSQL)
 	if err != nil {
 		return fmt.Errorf("failed to create categories table: %v", err)
@@ -99,6 +109,11 @@ func CreateTables(db *sql.DB) error {
 	_, err = db.Exec(createCommentReactionsTableSQL)
 	if err != nil {
 		return fmt.Errorf("failed to create comment_reactions table: %v", err)
+	}
+
+	_, err = db.Exec(createReportsTableSQL)
+	if err != nil {
+		return fmt.Errorf("failed to create reports table: %v", err)
 	}
 
 	return nil
